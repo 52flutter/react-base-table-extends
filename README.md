@@ -5,7 +5,7 @@
 Install dependencies,
 
 ```bash
-$ npm i
+$ npm i react-base-table-extends
 ```
 
 Start the dev server,

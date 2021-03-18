@@ -7,9 +7,15 @@
 /yarn.lock
 /package-lock.json
 
+
+
 # production
 /dist
 /docs-dist
+
+/es
+/lib
+
 
 # misc
 .DS_Store
@@ -27,5 +33,3 @@
 /.idea
 
 
-/es
-/lib
