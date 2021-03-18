@@ -1,0 +1,31 @@
+@import './_BaseTable.less';
+
+:root {
+  --table-span-bg: #fff;
+
+  --highlight-bgcolor: #f3f3f3;
+  --highlight-color: #000;
+  --hover-bgcolor: #f3f3f3;
+  --header-hover-bgcolor: #ddd;
+  --header-bgcolor: #e9edf2;
+  --bgcolor: #fff;
+}
+
+.table-span-cell {
+  background-color: var(--table-span-bg);
+}
+
+.BaseTable__row:hover,
+.BaseTable__row--hovered {
+  .table-span-cell {
+    background-color: #f3f3f3;
+  }
+}
+
+.highlight {
+  background-color: var(--highlight-bgcolor) !important;
+  color: var(--highlight-color);
+  .table-span-cell {
+    background-color: var(--highlight-bgcolor) !important;
+  }
+}
