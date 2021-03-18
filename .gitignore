@@ -22,4 +22,10 @@
 
 # ide
 /.vscode
+
+
 /.idea
+
+
+/es
+/lib
