@@ -48,7 +48,7 @@ export const generateData = (columns: any, count = 200, prefix = 'row-') =>
         if (_rowIndex === 1 || _rowIndex === 2 || _rowIndex === 3) {
           _rowIndex = 1;
         }
-        if (_rowIndex === 7 || _rowIndex === 8 || _rowIndex === 9) {
+        if (_rowIndex >= 7 && _rowIndex <= 17) {
           _rowIndex = 9;
         }
         rowData[column.dataKey] = `Row ${_rowIndex} - Col ${index}`;

@@ -87,6 +87,9 @@ export function autoRowSpan() {
       }),
     );
 
+    // pipeline.appendTableProps('overscanCount', 10);
+    // pipeline.appendTableProps('overscanRowCount', 10);
+    pipeline.appendTableProps('virtual', false);
     pipeline.appendTableProps(
       'rowRenderer',
       ({ rowData, rowIndex, cells, columns }) => {
