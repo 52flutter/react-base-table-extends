@@ -103,7 +103,7 @@ class GridTable extends React.PureComponent {
       } else {
         scrollTop = newData.length * rowHeight;
       }
-      console.log('scrollTop', scrollTop);
+      // console.log('scrollTop', scrollTop);
       this.divBodyRef.scrollTop = scrollTop;
       if (align === 'start') {
         this.divBodyRef.scrollLeft = 0;

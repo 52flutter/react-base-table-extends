@@ -209,7 +209,7 @@ export function groupHeader(opts: {
         const groupCells: any[] = [];
 
         const renderEndMap: Record<string, string | boolean> = {};
-        console.log('cells', cells);
+        // console.log('cells', cells);
 
         const renderTreeLevel = (
           tree: ITreeItem,
@@ -269,7 +269,7 @@ export function groupHeader(opts: {
               const width = getWidth(columns, item, cells);
               //补充固定的宽度 左右边距 边框等 否则会错位
               const leafNodes = geLeafNode(columns, item);
-              console.log('leafNodes', leafNodes, item);
+              // console.log('leafNodes', leafNodes, item);
               const paddingStyle = {
                 borderLeft: `${leafNodes.length}px solid transparent`,
                 padding: `0 ${leafNodes.length * padding}px`,

@@ -1,5 +1,4 @@
 {
- 
   "name": "react-base-table-extends",
   "version": "1.0.4",
   "scripts": {
@@ -16,7 +15,7 @@
   "main": "lib",
   "module": "es",
   "types": "es/index.d.ts",
-   "files": [
+  "files": [
     "lib/",
     "es/"
   ],
@@ -31,6 +30,7 @@
       "prettier --parser=typescript --write"
     ]
   },
+ 
   "dependencies": {
     "classnames": "^2.2.6",
     "memoize-one": "^5.1.1",
@@ -39,7 +39,6 @@
     "react-virtualized-auto-sizer": "^1.0.5",
     "react-window": "^1.8.6",
     "styled-components": "^5.2.1"
-  
   },
   "devDependencies": {
     "@popperjs/core": "^2.9.1",
@@ -47,13 +46,13 @@
     "@types/styled-components": "^5.1.9",
     "@umijs/test": "^3.0.5",
     "antd": "^4.14.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "dumi": "^1.0.13",
     "father-build": "^1.17.2",
     "gh-pages": "^3.0.0",
     "less-plugin-sass2less": "^1.2.0",
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
-  
     "react-popper": "^2.2.4",
     "yorkie": "^2.0.0"
   },

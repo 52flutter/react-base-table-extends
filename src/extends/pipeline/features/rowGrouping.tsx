@@ -169,7 +169,7 @@ export function rowGrouping(opts: RowGroupingFeatureOptions = {}) {
           if (columns[colIndex]['__placeholder__']) {
             colIndex = 0;
           }
-          console.log('rowRenderer', columns, args);
+          // console.log('rowRenderer', columns, args);
           let totalWidth = 0;
           cells.forEach((c: any, index) => {
             if (index >= colIndex) {

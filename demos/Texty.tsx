@@ -151,7 +151,7 @@ class Texty extends React.PureComponent<ITextyProps, any> {
       (!!target && target.scrollWidth > target.offsetWidth) || auto === false;
     const showTooltip = this.state.isHovered && isTruncated;
 
-    console.log('showTooltip', showTooltip, this.props);
+    // console.log('showTooltip', showTooltip, this.props);
     return (
       <Tag
         {...rest}
