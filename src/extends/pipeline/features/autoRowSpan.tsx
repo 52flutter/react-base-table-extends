@@ -12,12 +12,13 @@ export interface SpanRect {
   bottom: number;
   left: number;
   right: number;
+  isEmpty?: boolean;
 }
 
 export function autoRowSpan() {
   return function autoRowSpanStep(pipeline: TablePipeline) {
     const dataSource = pipeline.getDataSource();
-
+    let maxRowSpan = 0;
     pipeline.mapColumns(
       makeRecursiveMapper((col, { startIndex, endIndex }) => {
         if (!col.features?.autoRowSpan) {
@@ -59,6 +60,7 @@ export function autoRowSpan() {
                   ...spanRect,
                   top: lastBottom + j,
                   bottom: lastBottom + 1 + j,
+                  isEmpty: true,
                 });
               }
               j++;
@@ -77,6 +79,11 @@ export function autoRowSpan() {
             right: endIndex,
           });
         }
+        spanRects.forEach(p => {
+          if (p.bottom - p.top > maxRowSpan) {
+            maxRowSpan = p.bottom - p.top;
+          }
+        });
         // console.log('spanRects', spanRects);
         return {
           ...col,
@@ -87,15 +94,21 @@ export function autoRowSpan() {
       }),
     );
 
-    // pipeline.appendTableProps('overscanCount', 10);
-    // pipeline.appendTableProps('overscanRowCount', 10);
-    pipeline.appendTableProps('virtual', false);
+    if (maxRowSpan) {
+      // pipeline.appendTableProps('overscanCount', maxRowSpan);
+      pipeline.appendTableProps('overscanRowCount', maxRowSpan);
+      // overscanRowAlways
+      pipeline.appendTableProps('overscanRowAlways', true);
+    }
+
+    // pipeline.appendTableProps('virtual', false);
     pipeline.appendTableProps(
       'rowRenderer',
       ({ rowData, rowIndex, cells, columns }) => {
         columns.map((col, spanIndex) => {
           if (col?.getSpanRect) {
-            const { top = 0, bottom = 0 } = col.getSpanRect(rowIndex) || {};
+            const { top = 0, bottom = 0, isEmpty } =
+              col.getSpanRect(rowIndex) || {};
             // const colSpan = right - left;
             // if (colSpan > 1 && cells[spanIndex]) {
             //   let width = cells[spanIndex].props.style.width;
@@ -109,12 +122,28 @@ export function autoRowSpan() {
             //   };
             //   cells[spanIndex] = React.cloneElement(cells[spanIndex], { style, className: cx(cells[spanIndex].props?.className, 'table-span-cell') });
             // }
+            // if (isEmpty) {
+            //   const cell: any = cells[spanIndex];
+            //   const style = {
+            //     ...cell?.props?.style,
+            //     height: pipeline.getRowHeight(),
+
+            //     // background: 'red',
+            //     border: 'none',
+            //   };
+            //   cells[spanIndex] = React.cloneElement(cell, {
+            //     style,
+            //     children: <div></div>,
+            //     className: cx(cell?.props?.className, 'table-span-cell'),
+            //   });
+            // }
             const rowSpan = bottom - top;
             if (rowSpan > 1 && cells[spanIndex]) {
               const cell: any = cells[spanIndex];
               const style = {
                 ...cell?.props?.style,
                 height: rowSpan * pipeline.getRowHeight() - 1,
+                // height: 30,
                 alignSelf: 'flex-start',
                 zIndex: 1,
               };
