@@ -72,12 +72,21 @@ export function autoRowSpan() {
         }
 
         for (let i = lastBottom; i < dataSource.length; i++) {
-          spanRects.push({
-            top: lastBottom,
-            bottom: dataSource.length,
-            left: startIndex,
-            right: endIndex,
-          });
+          if (lastBottom === i) {
+            spanRects.push({
+              top: lastBottom,
+              bottom: dataSource.length,
+              left: startIndex,
+              right: endIndex,
+            });
+          } else {
+            spanRects.push({
+              top: i,
+              bottom: i,
+              left: startIndex,
+              right: endIndex,
+            });
+          }
         }
         spanRects.forEach(p => {
           if (p.bottom - p.top > maxRowSpan) {

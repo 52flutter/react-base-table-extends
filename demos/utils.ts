@@ -51,6 +51,10 @@ export const generateData = (columns: any, count = 200, prefix = 'row-') =>
         if (_rowIndex >= 7 && _rowIndex <= 17) {
           _rowIndex = 9;
         }
+
+        if (_rowIndex >= count - 4) {
+          _rowIndex = count - 4;
+        }
         rowData[column.dataKey] = `Row ${_rowIndex} - Col ${index}`;
         // rowData.groupTitle=`Row ${_rowIndex} `
         return rowData;
