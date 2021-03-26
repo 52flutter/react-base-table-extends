@@ -31,7 +31,7 @@ function FilterIcon({ size = 32, style, className, filter }: any) {
 
 export default function Index() {
   const columns = generateColumns(10);
-  const data = generateData(columns, 200);
+  const data = generateData(columns, 13);
   const [open, setOpen] = useState(false);
   const pipeline = useTablePipeline({ primaryKey: 'id' })
     .input({ data, columns: columns })
@@ -39,7 +39,7 @@ export default function Index() {
 
   return (
     <>
-      <FilterIcon />
+      {/* <FilterIcon /> */}
       <Button
         onClick={() => {
           setOpen((pre: any) => {

@@ -53,40 +53,43 @@ export function useTableAutoScroll({
           const index = Math.floor(scrollTop / rowHeight);
           const targetTop = rowHeight * index + rowHeight;
           const clientHeight =
-            tableRef.current?.table?.bodyRef?._outerRef?.clientHeight;
+            tableRef.current?.table?.bodyRef?._outerRef?.parentElement
+              ?.offsetHeight;
           const scrollHeight =
             tableRef.current?.table?.bodyRef?._outerRef?.scrollHeight;
-          if (clientHeight && scrollHeight) {
-            if (scrollHeight - scrollTop < clientHeight) {
-              // 滚动到最后的时候 从当前位置截取数据 把当前的数据作为第一条 其他数据按顺序追加上去
-              setTableData((pre: any[]) => {
-                let newData = pre.concat([]);
-                const sourceIndex =
-                  data.findIndex(
-                    (p: any) =>
-                      p[rowKey] === newData[newData.length - 1][rowKey],
-                  ) + 1;
-                const localIndex = index;
-                const appendData: any[] = [];
-                for (let i = sourceIndex; i < sourceIndex + localIndex; i++) {
-                  appendData.push({ ...data[i % data.length] });
-                }
-                newData = newData.slice(localIndex);
-                return newData.concat(appendData);
-              });
-              setTimeout(() => {
-                (tableRef.current as any)?.scrollToTop(0);
-                scrollTopAnimation(tableRef.current, rowHeight, true, () => {
+          if (scrollHeight > clientHeight) {
+            if (clientHeight && scrollHeight) {
+              if (scrollHeight - scrollTop < clientHeight) {
+                // 滚动到最后的时候 从当前位置截取数据 把当前的数据作为第一条 其他数据按顺序追加上去
+                setTableData((pre: any[]) => {
+                  let newData = pre.concat([]);
+                  const sourceIndex =
+                    data.findIndex(
+                      (p: any) =>
+                        p[rowKey] === newData[newData.length - 1][rowKey],
+                    ) + 1;
+                  const localIndex = index;
+                  const appendData: any[] = [];
+                  for (let i = sourceIndex; i < sourceIndex + localIndex; i++) {
+                    appendData.push({ ...data[i % data.length] });
+                  }
+                  newData = newData.slice(localIndex);
+                  return newData.concat(appendData);
+                });
+                setTimeout(() => {
+                  (tableRef.current as any)?.scrollToTop(0);
+                  scrollTopAnimation(tableRef.current, rowHeight, true, () => {
+                    func();
+                  });
+                }, 0);
+              } else {
+                scrollTopAnimation(tableRef.current, targetTop, true, () => {
                   func();
                 });
-              }, 0);
+              }
             } else {
-              scrollTopAnimation(tableRef.current, targetTop, true, () => {
-                func();
-              });
+              func();
             }
-          } else {
-            func();
           }
         }
       }, interval);
