@@ -30,7 +30,6 @@
       "prettier --parser=typescript --write"
     ]
   },
- 
   "dependencies": {
     "classnames": "^2.2.6",
     "memoize-one": "^5.1.1",
@@ -54,6 +53,7 @@
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
     "react-popper": "^2.2.4",
+    "xlsx": "^0.16.9",
     "yorkie": "^2.0.0"
   },
   "resolutions": {

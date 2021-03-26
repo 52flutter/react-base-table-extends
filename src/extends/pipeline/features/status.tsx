@@ -2,6 +2,14 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { TablePipeline } from '../pipeline';
 
+const Empty = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 16px;
+`;
+
 const rotate = keyframes`
   from {
     transform: rotate(0deg);
@@ -28,28 +36,41 @@ const LoadingLayer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.3);
   margin: 0;
   width: 100%;
   height: 100%;
 `;
 
-export function loading({ loading }: { loading: boolean }) {
+export function status({ loading }: { loading: boolean }) {
   return function setup(pipeline: TablePipeline) {
+    const EmptyComponent =
+      pipeline.ctx.components.Empty || (() => <Empty>Table is empty</Empty>);
+    pipeline.appendTableProps('emptyRenderer', () => {
+      if (loading) {
+        return null;
+      }
+      return <EmptyComponent />;
+    });
+
+    const LoadingComponent = pipeline.ctx.components.loading
+      ? pipeline.ctx.components.loading
+      : () => {
+          return (
+            <LoadingLayer>
+              <Loader />
+            </LoadingLayer>
+          );
+        };
+
     const renderOverlay = () => {
       if (loading) {
-        if (pipeline.ctx.components.loading) {
-          return pipeline.ctx.components.loading;
-        }
-        return (
-          <LoadingLayer>
-            <Loader />
-          </LoadingLayer>
-        );
+        return <LoadingComponent />;
       }
       return null;
     };
+
     pipeline.appendTableProps('overlayRenderer', renderOverlay);
+
     return pipeline;
   };
 }

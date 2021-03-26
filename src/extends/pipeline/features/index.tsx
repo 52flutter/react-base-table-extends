@@ -14,6 +14,6 @@ export { tips } from './tips';
 export { treeMode, TreeModeFeatureOptions, treeMetaSymbol } from './treeMode';
 export { treeSelect, TreeSelectFeatureOptions } from './treeSelect';
 export { groupHeader } from './groupHeader';
-export { loading } from './loading';
-export { empty } from './empty';
+export { status } from './status';
+
 export { autoScrollRow } from './autoScrollRow';

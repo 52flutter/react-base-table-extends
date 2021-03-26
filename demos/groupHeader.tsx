@@ -3,8 +3,10 @@ import {
   useTablePipeline,
   BaseTable,
   features,
+  exportTableAsExcel,
 } from 'react-base-table-extends';
-import { Checkbox, Radio } from 'antd';
+import { Button, Checkbox, Radio } from 'antd';
+import XLSX_NS from 'xlsx';
 import { generateColumns, generateData } from './utils';
 
 export default function Index() {
@@ -149,5 +151,16 @@ export default function Index() {
     .input({ data: data1, columns: columns2 })
     .use(features.groupHeader());
 
-  return <BaseTable {...pipeline.getProps()} width={1000} height={400} />;
+  return (
+    <>
+      <Button
+        onClick={() => {
+          exportTableAsExcel(XLSX_NS, data1, columns2, '111.xlsx');
+        }}
+      >
+        导出分组表格
+      </Button>
+      <BaseTable {...pipeline.getProps()} width={1000} height={400} />
+    </>
+  );
 }

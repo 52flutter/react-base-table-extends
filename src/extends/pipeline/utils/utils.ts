@@ -1,3 +1,4 @@
+import { getValue } from '../../../base';
 import cx from 'classnames';
 import React from 'react';
 import isEqual from 'react-fast-compare';
@@ -275,7 +276,12 @@ export function safeGetValue(column: ArtColumn, record: any, rowIndex: number) {
   if (column.getValue) {
     return column.getValue(record, rowIndex);
   }
-  return record[column?.dataKey || ''] || record[column.key];
+  return getValue(
+    record,
+    column?.dataKey || column?.key?.toString() || '',
+    undefined,
+  );
+  // return record[column?.dataKey || ''] || record[column.key];
 }
 
 export function flatMap<T, U>(
@@ -387,4 +393,41 @@ export function scrollTopAnimation(
     target.scrollToTop(nextTop);
     callback?.(nextTop);
   }
+}
+
+/** 获取一棵树的高度/深度 (0-based) */
+export function getTreeDepth(nodes: AbstractTreeNode[]) {
+  let maxDepth = -1;
+  dfs(nodes, 0);
+  return maxDepth;
+
+  function dfs(columns: AbstractTreeNode[], depth: number) {
+    for (const column of columns) {
+      if (isLeafNode(column)) {
+        maxDepth = Math.max(maxDepth, depth);
+      } else {
+        dfs(column.children || [], depth + 1);
+      }
+    }
+  }
+}
+
+/**
+ * 树形结构展开成扁平数组
+ *
+ * @export
+ * @template T
+ * @param {T[]} data 原始的树形数据
+ * @param {string} [children='children'] children的字段名称
+ * @returns {T[]}
+ */
+export function flatten<T>(data: T[], children = 'children'): T[] {
+  if (!data) {
+    return [];
+  }
+  return data.reduce(
+    (arr: T[], item: any) =>
+      arr.concat([item], flatten((item[children] || []) as any, children)),
+    [],
+  );
 }

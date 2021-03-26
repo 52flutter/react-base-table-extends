@@ -1,5 +1,5 @@
 // @ts-nocheck
-
+import React from 'react';
 export const generateColumns = (count = 10, prefix = 'column-', props = {}) =>
   new Array(count).fill(0).map((column, columnIndex) =>
     columnIndex === 3 || columnIndex === 4 || columnIndex === 5
@@ -31,6 +31,9 @@ export const generateColumns = (count = 10, prefix = 'column-', props = {}) =>
           width: 150,
           resizable: true,
           features: { tips: true },
+          cellRenderer: ({ cellData, rowData }) => {
+            return <div style={{ color: 'red' }}>{cellData}1111</div>;
+          },
 
           // sortable: columnIndex === 1,
         },

@@ -96,7 +96,7 @@ export function autoRowSpan() {
         // console.log('spanRects', spanRects);
         return {
           ...col,
-          getSpanRect(rowIndex: number) {
+          getSpanRect(value: any, row: any, rowIndex: number) {
             return spanRects[rowIndex];
           },
         };
@@ -117,7 +117,11 @@ export function autoRowSpan() {
         columns.map((col, spanIndex) => {
           if (col?.getSpanRect) {
             const { top = 0, bottom = 0, isEmpty } =
-              col.getSpanRect(rowIndex) || {};
+              col.getSpanRect(
+                safeGetValue(col, rowData, rowIndex),
+                rowData,
+                rowIndex,
+              ) || {};
             // const colSpan = right - left;
             // if (colSpan > 1 && cells[spanIndex]) {
             //   let width = cells[spanIndex].props.style.width;
