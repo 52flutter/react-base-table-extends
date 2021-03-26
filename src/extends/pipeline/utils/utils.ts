@@ -1,6 +1,6 @@
 import cx from 'classnames';
 import React from 'react';
-
+import isEqual from 'react-fast-compare';
 import { ArtColumn } from '../interfaces';
 
 export interface AbstractTreeNode {
@@ -330,4 +330,61 @@ export function safeHeaderRender(
   }
 
   return value;
+}
+
+type DeepIsEqualType<TDeps = React.DependencyList> = (
+  newDeps: TDeps,
+  oldDeps: TDeps,
+) => boolean;
+
+/** 解决数组对象等依赖 React默认useEffect 地址发现变化导致依赖变化 重复执行的问题  */
+export function useDeepEqualEffect<TDeps = React.DependencyList>(
+  effect: React.EffectCallback,
+  deps: TDeps,
+  compare: DeepIsEqualType<TDeps> = isEqual,
+) {
+  const oldDeps = React.useRef<TDeps | undefined>(undefined);
+  if (!oldDeps.current || !compare(deps, oldDeps.current as TDeps)) {
+    oldDeps.current = deps;
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(effect, [oldDeps.current]);
+}
+
+export const requestAnimationFramePolyfill = (() => {
+  const _window = window as any;
+  const raf =
+    _window.requestAnimationFrame ||
+    _window.mozRequestAnimationFrame ||
+    _window.webkitRequestAnimationFrame ||
+    ((fn: any) => {
+      return _window.setTimeout(fn, 20);
+    });
+  return (fn: any) => raf(fn);
+})();
+
+export function scrollTopAnimation(
+  target: any,
+  nextTop: number,
+  animation = true,
+  callback?: (top: number) => void,
+) {
+  if (!target) {
+    return;
+  }
+  let top = target?._scroll?.scrollTop || 0;
+  const step = () => {
+    target.scrollToTop(top > nextTop ? nextTop : top);
+    if (top <= nextTop) {
+      top += 2;
+      requestAnimationFramePolyfill(step);
+    }
+    callback?.(nextTop);
+  };
+  if (animation) {
+    requestAnimationFramePolyfill(step);
+  } else {
+    target.scrollToTop(nextTop);
+    callback?.(nextTop);
+  }
 }

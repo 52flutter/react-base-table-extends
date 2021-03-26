@@ -16,3 +16,4 @@ export { treeSelect, TreeSelectFeatureOptions } from './treeSelect';
 export { groupHeader } from './groupHeader';
 export { loading } from './loading';
 export { empty } from './empty';
+export { autoScrollRow } from './autoScrollRow';
