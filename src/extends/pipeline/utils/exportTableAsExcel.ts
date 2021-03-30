@@ -84,7 +84,7 @@ export default function exportTableAsExcel(
   addTopHeaders(origin);
   addDataPart(move(origin, 0, topHeaderHeight));
 
-  if (filename.indexOf('.csv') >= -1) {
+  if (filename.indexOf('.csv') > -1) {
     xlsxPackage.writeFile(
       {
         SheetNames: ['Sheet1'],
