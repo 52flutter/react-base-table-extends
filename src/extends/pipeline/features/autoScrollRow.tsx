@@ -47,7 +47,6 @@ export function useTableAutoScroll({
         return;
       }
       timerRef.current = setTimeout(() => {
-        console.log('tableRef', tableRef.current);
         if (tableRef.current) {
           const scrollTop = (tableRef.current as any)?._scroll?.scrollTop || 0;
           const index = Math.floor(scrollTop / rowHeight);
@@ -58,8 +57,8 @@ export function useTableAutoScroll({
           const scrollHeight =
             tableRef.current?.table?.bodyRef?._outerRef?.scrollHeight;
           if (scrollHeight > clientHeight) {
-            if (clientHeight && scrollHeight) {
-              if (scrollHeight - scrollTop < clientHeight) {
+            if (clientHeight !== undefined && scrollHeight !== undefined) {
+              if (scrollHeight - scrollTop <= clientHeight) {
                 // 滚动到最后的时候 从当前位置截取数据 把当前的数据作为第一条 其他数据按顺序追加上去
                 setTableData((pre: any[]) => {
                   let newData = pre.concat([]);
