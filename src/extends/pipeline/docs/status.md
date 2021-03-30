@@ -1,6 +1,6 @@
 ---
 id: status
-title: status
+title: 表格状态
 ---
 
 控制表格状态 无数据和 loading

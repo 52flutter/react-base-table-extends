@@ -2,7 +2,7 @@
 group:
   title: 扩展功能
 id: auto-scroll-row
-title: 行滚动显示
+title: 逐行滚动显示
 ---
 
 自动行滚动
