@@ -17,3 +17,4 @@ export { groupHeader } from './groupHeader';
 export { status } from './status';
 
 export { autoScrollRow } from './autoScrollRow';
+export { infiniteLoading } from './infiniteLoading';

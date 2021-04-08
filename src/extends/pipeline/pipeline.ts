@@ -229,7 +229,7 @@ export class TablePipeline {
       };
     }
 
-    if (this._rowEventHandlers) {
+    if (this._rowEventHandlers && Object.keys(this._rowEventHandlers)?.length) {
       result.rowEventHandlers = this._rowEventHandlers;
     }
     Object.keys(this._tableProps || {}).map(key => {
@@ -237,6 +237,9 @@ export class TablePipeline {
         const first = this._tableProps[key][0];
         // 如果是方法 需要合并 否则取最后一个
         if (typeof first === 'function') {
+          // if (key === 'footerRenderer') {
+          //   result[key] = first;
+          // } else {
           result[key] = (...args: any[]) => {
             // rowClassName 需要合并返回值
             if (key === 'rowClassName') {
@@ -263,6 +266,7 @@ export class TablePipeline {
             );
             // key === 'cellProps' && console.log('res111', key, resData, args);
             return resData;
+            // };
           };
         } else {
           result[key] = this._tableProps[key][this._tableProps[key].length - 1];

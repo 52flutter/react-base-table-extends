@@ -47,7 +47,7 @@ export default function Index() {
           });
         }}
       >
-        切换滚动
+        {open ? '重置滚动' : '开始滚动'}
       </Button>
       <BaseTable {...pipeline.getProps()} width={1000} height={400} />
     </>

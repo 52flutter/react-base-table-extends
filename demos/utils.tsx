@@ -31,15 +31,20 @@ export const generateColumns = (count = 10, prefix = 'column-', props = {}) =>
           width: 150,
           resizable: true,
           features: { tips: true },
-          cellRenderer: ({ cellData, rowData }) => {
-            return <div style={{ color: 'red' }}>{cellData}1111</div>;
-          },
+          // cellRenderer: ({ cellData, rowData }) => {
+          //   return <div style={{ color: 'red' }}>{cellData}1111</div>;
+          // },
 
           // sortable: columnIndex === 1,
         },
   );
 
-export const generateData = (columns: any, count = 200, prefix = 'row-') =>
+export const generateData = (
+  columns: any,
+  count = 200,
+  prefix = 'row-',
+  startIndex = 0,
+) =>
   new Array(count).fill(0).map((row, rowIndex) => {
     return columns.reduce(
       (rowData: any, column: any, columnIndex: any) => {
@@ -47,7 +52,7 @@ export const generateData = (columns: any, count = 200, prefix = 'row-') =>
         // if(index===2 || index===3){
         //     index=2;
         // }
-        let _rowIndex = rowIndex;
+        let _rowIndex = rowIndex + startIndex;
         if (_rowIndex === 1 || _rowIndex === 2 || _rowIndex === 3) {
           _rowIndex = 1;
         }
@@ -55,9 +60,9 @@ export const generateData = (columns: any, count = 200, prefix = 'row-') =>
           _rowIndex = 9;
         }
 
-        if (_rowIndex >= count - 4) {
-          _rowIndex = count - 4;
-        }
+        // if (_rowIndex >= count - 4) {
+        //   _rowIndex = count - 4;
+        // }
         rowData[column.dataKey] = `Row ${_rowIndex} - Col ${index}`;
         // rowData.groupTitle=`Row ${_rowIndex} `
         return rowData;

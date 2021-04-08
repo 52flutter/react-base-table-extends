@@ -7,8 +7,6 @@ import {
   RecursiveFlatMapInfo,
 } from '../utils/utils';
 
-const padding = (window as any)['table-cell-padding'] || 7.5;
-
 type ITreeItem = ArtColumn;
 
 const getAllChildren = (item: ArtColumn) => {
@@ -161,7 +159,6 @@ export function groupHeader(opts: {
 }) {
   return (pipeline: TablePipeline) => {
     const columns = pipeline.getColumns();
-
     if (columns.find(p => p.children !== null && p.children !== undefined)) {
       let flatColumns = collectNodes(columns);
       const padding = opts?.cellPadding || 7.5;
@@ -186,7 +183,6 @@ export function groupHeader(opts: {
           rootColumns.push(flatColumns.find(p => p.key === key));
         }
       });
-
       const headerHead = opts?.headHeight
         ? opts.headHeight
         : pipeline.getHeaderHeight();
@@ -345,10 +341,7 @@ export function groupHeader(opts: {
         Array.from(Array(maxLevel + 1), (v, k) => headHeight),
       );
       pipeline.columns(collectNodes(columns, 'leaf-only'));
-      // headerHeight: Array.from(Array(maxLevel + 1), (v, k) => headHeight),
-      // columns: allColumns.filter(p => !p.children), console.log('maxLevel', maxLevel, colTreeInfo, flatColumns, rootColumns, maxLevel);
     }
-
     return pipeline;
   };
 }
