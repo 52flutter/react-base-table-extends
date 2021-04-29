@@ -305,9 +305,9 @@ export function groupHeader(opts: {
                     flexGrow: !isFixed(cells[realColumnIndex].props.style)
                       ? getWidth(columns, item, cells)
                       : cells[realColumnIndex].props.style.flexGrow,
-                    marginTop: (maxLevel - level) * headHeight,
-                    lineHeight: `${(maxLevel - level + 1) * headHeight}px`,
-                    height: (maxLevel - level + 1) * headHeight,
+                    marginTop: (maxLevel - level - 1) * headHeight,
+                    lineHeight: `${(maxLevel - level) * headHeight}px`,
+                    height: (maxLevel - level) * headHeight,
                   },
                 }),
               );
@@ -338,7 +338,7 @@ export function groupHeader(opts: {
       pipeline.appendTableProps('headerRenderer', headerRenderer);
       pipeline.appendTableProps(
         'headerHeight',
-        Array.from(Array(maxLevel + 1), (v, k) => headHeight),
+        Array.from(Array(maxLevel), (v, k) => headHeight),
       );
       pipeline.columns(collectNodes(columns, 'leaf-only'));
     }

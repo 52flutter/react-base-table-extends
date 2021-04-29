@@ -4,7 +4,7 @@ import {
   BaseTable,
   features,
 } from 'react-base-table-extends';
-
+import Texty from './Texty';
 import { generateColumns, generateData, getTreeData } from './utils';
 
 export default function Index() {
@@ -13,9 +13,11 @@ export default function Index() {
 
   const pipeline = useTablePipeline({
     primaryKey: 'id',
+    components: { Tooltip: Texty },
   })
     .input({ data, columns: columns })
-    .use(features.treeMode());
+    .use(features.treeMode())
+    .use(features.tips());
 
   return <BaseTable {...pipeline.getProps()} width={1000} height={400} />;
 }

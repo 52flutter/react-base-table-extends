@@ -5,6 +5,7 @@ import {
   features,
 } from 'react-base-table-extends';
 import { Checkbox } from 'antd';
+import Texty from './Texty';
 
 import { generateColumns, generateData, getTreeData } from './utils';
 
@@ -16,6 +17,7 @@ export default function Index() {
     primaryKey: 'id',
     components: {
       Checkbox,
+      Tooltip: Texty,
     },
   })
     .input({ data, columns: columns })
@@ -29,7 +31,8 @@ export default function Index() {
         clickArea: 'checkbox',
         checkboxColumn: { align: 'left', frozen: 'left' },
       }),
-    );
+    )
+    .use(features.tips());
 
   return <BaseTable {...pipeline.getProps()} width={1000} height={400} />;
 }
