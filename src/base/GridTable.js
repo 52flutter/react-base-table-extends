@@ -175,7 +175,11 @@ class GridTable extends React.PureComponent {
     let isVirtual =
       virtual === undefined ? (data.length > 100 ? true : false) : virtual;
     // isVirtual = false;
-    if (useIsScrolling === true || this.props.onEndReached) {
+    if (
+      useIsScrolling === true ||
+      estimatedRowHeight ||
+      this.props.onEndReached
+    ) {
       isVirtual = true;
     }
     return (
