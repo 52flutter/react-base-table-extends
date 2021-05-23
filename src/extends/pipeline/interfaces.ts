@@ -1,4 +1,4 @@
-import { BaseTableProps, ColumnShape } from '../../base';
+import { BaseTableProps, ColumnShape } from 'react-base-table';
 
 export interface ArtColumn<T = any> extends ColumnShape<T> {
   children?: ArtColumn[];

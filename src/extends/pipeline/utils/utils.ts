@@ -1,4 +1,4 @@
-import { getValue } from '../../../base';
+import { getValue } from 'react-base-table';
 import cx from 'classnames';
 import React from 'react';
 import isEqual from 'react-fast-compare';

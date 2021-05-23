@@ -1,5 +1,5 @@
-import { BaseTableProps } from '@/base';
 import React, { useState } from 'react';
+import { BaseTableProps } from 'react-base-table';
 
 import { ArtColumn, Transform, TableProps } from './interfaces';
 import { mergeCellProps } from './utils/utils';
