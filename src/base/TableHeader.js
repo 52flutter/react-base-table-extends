@@ -8,12 +8,17 @@ class TableHeader extends React.PureComponent {
     this.renderHeaderRow = this.renderHeaderRow.bind(this);
     this.renderFrozenRow = this.renderFrozenRow.bind(this);
     this._setRef = this._setRef.bind(this);
-    this.scrollLeft = 0;
+    // this._scrollLeft = 0;
   }
 
   scrollTo(offset) {
-    if (this.headerRef && this.scrollLeft !== offset) {
-      this.scrollLeft = offset;
+    // // console.log('this', this, offset, this._scrollLeft !== offset);
+    // if (this.headerRef && offset && this._scrollLeft !== offset) {
+    //   this._scrollLeft = offset;
+    //   this.headerRef.scrollLeft = offset;
+    //   return;
+    // }
+    if (this.headerRef) {
       this.headerRef.scrollLeft = offset;
     }
   }
@@ -35,7 +40,14 @@ class TableHeader extends React.PureComponent {
   }
 
   render() {
-    const { className, width, height, rowWidth, headerHeight, frozenData } = this.props;
+    const {
+      className,
+      width,
+      height,
+      rowWidth,
+      headerHeight,
+      frozenData,
+    } = this.props;
     if (height <= 0) return null;
 
     const style = {
@@ -50,7 +62,9 @@ class TableHeader extends React.PureComponent {
       height,
     };
 
-    const rowHeights = Array.isArray(headerHeight) ? headerHeight : [headerHeight];
+    const rowHeights = Array.isArray(headerHeight)
+      ? headerHeight
+      : [headerHeight];
     return (
       <div role="grid" ref={this._setRef} className={className} style={style}>
         <div role="rowgroup" style={innerStyle}>
@@ -70,7 +84,10 @@ TableHeader.propTypes = {
   className: PropTypes.string,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  headerHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]).isRequired,
+  headerHeight: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.arrayOf(PropTypes.number),
+  ]).isRequired,
   rowWidth: PropTypes.number.isRequired,
   rowHeight: PropTypes.number.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,

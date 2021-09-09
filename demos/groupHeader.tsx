@@ -114,7 +114,7 @@ export default function Index() {
   ];
 
   const data1: any[] = [];
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 20000; i++) {
     data1.push({
       key: i,
       name: 'John Brown',
@@ -146,7 +146,7 @@ export default function Index() {
 
   const pipeline = useTablePipeline({
     components: { Radio: Radio },
-    primaryKey: 'id',
+    primaryKey: 'key',
   })
     .input({ data: data1, columns: columns2 })
     .use(features.groupHeader());
@@ -160,7 +160,7 @@ export default function Index() {
       >
         导出分组表格
       </Button>
-      <BaseTable {...pipeline.getProps()} width={1000} height={400} />
+      <BaseTable {...pipeline.getProps()} width={1000} height={800} />
     </>
   );
 }

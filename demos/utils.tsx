@@ -14,6 +14,7 @@ export const generateColumns = (count = 10, prefix = 'column-', props = {}) =>
 
           // 表头筛选 内部支持 number select string datetime ,扩展通过registedTableHeadFilter方法注册
           filterType: 'string',
+          frozen: 'left',
           // getValue:()=>{
           //   return "222"
           // },

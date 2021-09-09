@@ -41,7 +41,8 @@ const getWidth = (leafColumns: ITreeItem[], item: ArtColumn, cells: any[]) => {
       const columnIndex = leafColumns.findIndex(p => p.key === c.key);
       if (columnIndex >= 0) {
         if (cells[columnIndex]?.props?.style?.width)
-          width += cells[columnIndex].props.style.width;
+          if (cells[columnIndex]?.props?.style?.width)
+            width += cells[columnIndex].props.style.width;
       }
     }
   });

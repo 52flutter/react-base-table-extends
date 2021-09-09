@@ -15,5 +15,12 @@ export default function Index() {
     .input({ data, columns: columns })
     .use(features.columnHover());
 
-  return <BaseTable {...pipeline.getProps()} width={1000} height={400} />;
+  return (
+    <BaseTable
+      {...pipeline.getProps()}
+      // fixed={true}
+      width={1000}
+      height={400}
+    />
+  );
 }
