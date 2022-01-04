@@ -88,7 +88,7 @@ export function autoRowSpan() {
             });
           }
         }
-        spanRects.forEach(p => {
+        spanRects.forEach((p) => {
           if (p.bottom - p.top > maxRowSpan) {
             maxRowSpan = p.bottom - p.top;
           }
@@ -116,12 +116,15 @@ export function autoRowSpan() {
       ({ rowData, rowIndex, cells, columns }) => {
         columns.map((col, spanIndex) => {
           if (col?.getSpanRect) {
-            const { top = 0, bottom = 0, isEmpty } =
-              col.getSpanRect(
-                safeGetValue(col, rowData, rowIndex),
-                rowData,
-                rowIndex,
-              ) || {};
+            const {
+              top = 0,
+              bottom = 0,
+              isEmpty,
+            } = col.getSpanRect(
+              safeGetValue(col, rowData, rowIndex),
+              rowData,
+              rowIndex,
+            ) || {};
             // const colSpan = right - left;
             // if (colSpan > 1 && cells[spanIndex]) {
             //   let width = cells[spanIndex].props.style.width;
@@ -168,6 +171,74 @@ export function autoRowSpan() {
           }
         });
         return cells;
+      },
+    );
+    return pipeline;
+  };
+}
+
+const isFixed = (style: any) => {
+  // console.log('isFixed', style);
+  // fixed 等于true的时候是不铺满的按固定宽度来
+  if (style.flex) {
+    const flexStr = style.flex;
+
+    const flexArr = flexStr.split(' ');
+    const flexNum = Number(flexArr[0]);
+    const flexNum2 = Number(flexArr[1]);
+    if (
+      (flexNum !== 0 && flexNum.toString() !== 'NaN') ||
+      (flexNum2 !== 0 && flexNum2.toString() !== 'NaN')
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+  return true;
+};
+
+export function autoCellSpan() {
+  return function autoRowSpanStep(pipeline: TablePipeline) {
+    // const dataSource = pipeline.getDataSource();
+
+    // pipeline.appendTableProps('virtual', false);
+    pipeline.appendTableProps(
+      'rowRenderer',
+      ({ rowData, rowIndex, cells, columns }) => {
+        columns.map((col, spanIndex) => {
+          if (col?.getCellSpan) {
+            const { span = 0 } =
+              col.getCellSpan(
+                safeGetValue(col, rowData, rowIndex),
+                rowData,
+                rowIndex,
+              ) || {};
+
+            if (span > 1 && cells[spanIndex]) {
+              let width = 0;
+
+              for (let i = spanIndex; i < spanIndex + span; i++) {
+                const cell: any = cells[i];
+                width += cell?.props?.style.width;
+              }
+              for (let i = spanIndex + 1; i < spanIndex + span; i++) {
+                cells[i] = null;
+              }
+              const cell: any = cells[spanIndex];
+              const style = {
+                ...cell?.props?.style,
+                width: width + (!isFixed(cell?.props?.style) ? span * 7.5 : 0),
+                // padding: `0 ${span * 7.5}px`,
+              };
+              cells[spanIndex] = React.cloneElement(cell, {
+                style,
+                className: cx(cell?.props?.className, 'table-span-cell'),
+              });
+            }
+          }
+        });
+        return cells.filter((p) => p);
       },
     );
     return pipeline;

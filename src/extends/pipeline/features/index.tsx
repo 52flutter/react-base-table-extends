@@ -1,4 +1,4 @@
-export { autoRowSpan } from './autoRowSpan';
+export { autoRowSpan, autoCellSpan } from './autoRowSpan';
 export { buildTree } from './buildTree';
 export { columnHover, ColumnHoverFeatureOptions } from './columnHover';
 export {

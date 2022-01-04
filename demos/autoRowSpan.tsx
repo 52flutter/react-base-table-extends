@@ -13,9 +13,14 @@ export default function Index() {
   const columns = generateColumns(10);
   const data = generateData(columns, 200);
 
+  columns[0].getCellSpan = () => {
+    return { span: 3 };
+  };
+
   const pipeline = useTablePipeline()
     .input({ data, columns: columns })
-    .use(features.autoRowSpan());
+    .use(features.autoRowSpan())
+    .use(features.autoCellSpan());
   const props = pipeline.getProps();
   return (
     <>
@@ -26,7 +31,7 @@ export default function Index() {
       >
         导出
       </Button>
-      <BaseTable {...props} width={1000} height={400} />
+      <BaseTable fixed={true} border {...props} width={1000} height={400} />
     </>
   );
 }

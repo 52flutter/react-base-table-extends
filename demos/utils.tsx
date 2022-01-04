@@ -14,7 +14,7 @@ export const generateColumns = (count = 10, prefix = 'column-', props = {}) =>
 
           // 表头筛选 内部支持 number select string datetime ,扩展通过registedTableHeadFilter方法注册
           filterType: 'string',
-          frozen: 'left',
+          // frozen: 'left',
           // getValue:()=>{
           //   return "222"
           // },
@@ -108,7 +108,7 @@ export function unflatten(
   return tree;
 }
 const expandColumnKey = 'column-0';
-export const getTreeData = columns => {
+export const getTreeData = (columns) => {
   const data = generateData(columns, 200);
   for (let i = 0; i < 200; i++) {
     data.push({

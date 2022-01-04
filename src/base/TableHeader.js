@@ -19,7 +19,13 @@ class TableHeader extends React.PureComponent {
     //   return;
     // }
     if (this.headerRef) {
-      this.headerRef.scrollLeft = offset;
+      if (window.requestAnimationFrame) {
+        requestAnimationFrame(() => {
+          this.headerRef.scrollLeft = offset;
+        });
+      } else {
+        this.headerRef.scrollLeft = offset;
+      }
     }
   }
 
@@ -40,14 +46,8 @@ class TableHeader extends React.PureComponent {
   }
 
   render() {
-    const {
-      className,
-      width,
-      height,
-      rowWidth,
-      headerHeight,
-      frozenData,
-    } = this.props;
+    const { className, width, height, rowWidth, headerHeight, frozenData } =
+      this.props;
     if (height <= 0) return null;
 
     const style = {
