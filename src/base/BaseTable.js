@@ -15,7 +15,7 @@ import SortIndicator from './SortIndicator';
 import ColumnResizer from './ColumnResizer';
 import ColumnManager from './ColumnManager';
 
-import Footer from './components/Footer';
+// import Footer from './components/Footer';
 
 import {
   renderElement,
@@ -33,9 +33,7 @@ import {
   noop,
 } from './utils';
 
-const getColumns = memoize(
-  (columns, children) => columns || normalizeColumns(children),
-);
+const getColumns = (columns, children) => columns || normalizeColumns(children);
 
 const getContainerStyle = (width, maxWidth, height) => ({
   width,
@@ -164,6 +162,14 @@ class BaseTable extends React.PureComponent {
     this._horizontalScrollbarSize = 0;
     this._verticalScrollbarSize = 0;
     this._scrollbarPresenceChanged = false;
+  }
+
+  componentWillUnmount() {
+    this._getLeftTableContainerStyle.clear();
+    this._getRightTableContainerStyle.clear();
+    this._flattenOnKeys.clear();
+    this._resetColumnManager && this._resetColumnManager.clear();
+    this._getEstimatedTotalRowsHeight.clear();
   }
 
   /**
@@ -372,6 +378,7 @@ class BaseTable extends React.PureComponent {
       rowEventHandlers,
       expandColumnKey,
       estimatedRowHeight,
+      stripe = true,
     } = this.props;
 
     const rowClass = callOrReturn(rowClassName, { columns, rowData, rowIndex });
@@ -392,6 +399,9 @@ class BaseTable extends React.PureComponent {
         !isScrolling && rowKey === this.state.hoveredRowKey,
       [this._prefixClass('row--frozen')]: depth === 0 && rowIndex < 0,
       [this._prefixClass('row--customized')]: rowRenderer,
+      // 增加奇偶行颜色需求
+      [this._prefixClass('row--odd')]: (rowIndex + 1) % 2 === 1,
+      [this._prefixClass('row--even')]: (rowIndex + 1) % 2 === 0,
     });
 
     const hasFrozenColumns = this.columnManager.hasFrozenColumns();
@@ -797,14 +807,15 @@ class BaseTable extends React.PureComponent {
   }
 
   renderFooter() {
-    const { footerHeight, footerRenderer, classPrefix } = this.props;
+    const { footerHeight, footerRenderer } = this.props;
     if (footerHeight === 0) return null;
     return (
-      <Footer
-        footerRenderer={footerRenderer}
-        classPrefix={classPrefix}
+      <div
+        className={this._prefixClass('footer')}
         style={{ height: footerHeight }}
-      />
+      >
+        {renderElement(footerRenderer)}
+      </div>
     );
   }
 

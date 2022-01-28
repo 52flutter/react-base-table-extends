@@ -22,7 +22,7 @@ class GridTable extends React.PureComponent {
     this._itemKey = this._itemKey.bind(this);
     this._getBodyWidth = this._getBodyWidth.bind(this);
     this._handleItemsRendered = this._handleItemsRendered.bind(this);
-    this._resetColumnWidthCache = memoize(bodyWidth => {
+    this._resetColumnWidthCache = memoize((bodyWidth) => {
       if (!this.props.estimatedRowHeight) return;
       this.bodyRef && this.bodyRef.resetAfterColumnIndex(0, false);
     });
@@ -31,6 +31,10 @@ class GridTable extends React.PureComponent {
     this.renderRow = this.renderRow.bind(this);
 
     this.lastScrollArgs = {};
+  }
+  componentWillUnmount() {
+    this._resetColumnWidthCache.clear();
+    this._getEstimatedTotalRowsHeight.clear();
   }
 
   resetAfterRowIndex(rowIndex = 0, shouldForceUpdate) {
@@ -127,7 +131,7 @@ class GridTable extends React.PureComponent {
     return data.length * rowHeight;
   }
 
-  onDivScroll = event => {
+  onDivScroll = (event) => {
     const { scrollLeft, scrollTop } = event.currentTarget;
     // console.log('onDivScroll', event, scrollWidth, scrollLeft, clientWidth);
     this.props.onScroll && this.props.onScroll({ scrollLeft, scrollTop });
