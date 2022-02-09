@@ -226,6 +226,8 @@ class GridTable extends React.PureComponent {
               onScroll={isVirtual === false ? undefined : onScroll}
               onItemsRendered={this._handleItemsRendered}
               children={this.renderRow}
+              overscanRowCount={data.length}
+              // initialScrollTop={0}
             />
           </div>
         ) : (
