@@ -1,6 +1,6 @@
 {
   "name": "react-base-table-extends",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",

@@ -956,13 +956,17 @@ class BaseTable extends React.PureComponent {
   // for dynamic row height
   _getRowHeight(rowIndex) {
     const { estimatedRowHeight, rowKey } = this.props;
-    return (
-      this._rowHeightMap[this._data[rowIndex][rowKey]] ||
-      callOrReturn(estimatedRowHeight, {
-        rowData: this._data[rowIndex],
-        rowIndex,
-      })
-    );
+    //  fix height=0的问题
+    if (
+      this._rowHeightMap &&
+      this._rowHeightMap.hasOwnProperty(this._data[rowIndex][rowKey])
+    ) {
+      return this._rowHeightMap[this._data[rowIndex][rowKey]];
+    }
+    return callOrReturn(estimatedRowHeight, {
+      rowData: this._data[rowIndex],
+      rowIndex,
+    });
   }
 
   _getIsResetting() {
