@@ -820,16 +820,32 @@ class BaseTable extends React.PureComponent {
   }
 
   renderEmptyLayer() {
-    const { data, frozenData, footerHeight, emptyRenderer } = this.props;
+    const { data, frozenData, footerHeight, emptyRenderer, width, fixed } =
+      this.props;
 
     if ((data && data.length) || (frozenData && frozenData.length)) return null;
     const headerHeight = this._getHeaderHeight();
+    const totalColumnsWidth = this.getTotalColumnsWidth();
+    const onScroll = (e) => {
+      // console.log('onScroll', e);
+      const { scrollLeft } = e.currentTarget;
+      this._handleEmptyScroll({ scrollLeft });
+      // _handleEmptyScroll
+    };
     return (
       <div
         className={this._prefixClass('empty-layer')}
-        style={{ top: headerHeight, bottom: footerHeight }}
+        style={{
+          top: headerHeight,
+          bottom: footerHeight,
+        }}
       >
-        {renderElement(emptyRenderer)}
+        {renderElement(emptyRenderer, {
+          width,
+          onScroll,
+          fixed,
+          totalColumnsWidth: fixed === false ? width : totalColumnsWidth,
+        })}
       </div>
     );
   }
@@ -1117,6 +1133,12 @@ class BaseTable extends React.PureComponent {
     this.props.onScroll(args);
 
     if (args.scrollTop > lastScrollTop) this._maybeCallOnEndReached();
+  }
+
+  _handleEmptyScroll({ scrollLeft }) {
+    const lastScrollLeft = this._scroll.scrollLeft;
+
+    if (scrollLeft !== lastScrollLeft) this.scrollToLeft(scrollLeft);
   }
 
   _handleVerticalScroll({ scrollTop }) {

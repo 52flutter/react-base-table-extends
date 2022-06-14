@@ -1,3 +1,10 @@
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-04-14 11:32:30
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-06-14 14:01:08
+ * @Description:
+ */
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { TablePipeline } from '../pipeline';
@@ -45,11 +52,22 @@ export function status({ loading }: { loading: boolean }) {
   return function setup(pipeline: TablePipeline) {
     const EmptyComponent =
       pipeline.ctx.components.Empty || (() => <Empty>Table is empty</Empty>);
-    pipeline.appendTableProps('emptyRenderer', () => {
+    pipeline.appendTableProps('emptyRenderer', (dddd: any) => {
       if (loading) {
         return null;
       }
-      return <EmptyComponent />;
+      return (
+        <div
+          style={{ width: dddd.width, overflowX: 'auto', height: '100%' }}
+          onScroll={dddd.onScroll}
+        >
+          <div style={{ width: dddd.totalColumnsWidth, height: '100%' }}>
+            <div style={{ width: dddd.width, height: '100%' }}>
+              <EmptyComponent />
+            </div>
+          </div>
+        </div>
+      );
     });
 
     const LoadingComponent = pipeline.ctx.components.loading

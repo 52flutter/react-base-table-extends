@@ -1,3 +1,10 @@
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-04-14 11:32:30
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-06-13 12:20:06
+ * @Description:
+ */
 import React, { useState, useEffect } from 'react';
 import {
   useTablePipeline,
@@ -25,14 +32,19 @@ export default function Index() {
     <>
       <Button
         onClick={() => {
-          setLoading(pre => {
+          setLoading((pre) => {
             return !pre;
           });
         }}
       >
         切换loading
       </Button>
-      <BaseTable {...pipeline.getProps()} width={1000} height={400} />
+      <BaseTable
+        fixed={false}
+        {...pipeline.getProps()}
+        width={1000}
+        height={400}
+      />
     </>
   );
 }

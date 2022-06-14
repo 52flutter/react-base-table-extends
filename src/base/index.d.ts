@@ -248,7 +248,14 @@ export interface BaseTableProps<T = any> {
   /**
    * Custom renderer when the length of data is 0
    */
-  emptyRenderer?: CallOrReturn<React.ReactNode>;
+  emptyRenderer?:
+    | React.ReactNode
+    | ((props: {
+        fixed?: boolean;
+        onScroll: (e: any) => void;
+        width: number;
+        totalColumnsWidth: number;
+      }) => React.ReactNode);
   /**
    * Custom footer renderer, available only if `footerHeight` is larger then 0
    */
