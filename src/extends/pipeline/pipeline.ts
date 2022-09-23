@@ -1,4 +1,4 @@
-import { BaseTableProps } from '@/base';
+import { BaseTableProps } from '../../base';
 import React, { useState } from 'react';
 
 import { ArtColumn, Transform, TableProps } from './interfaces';
@@ -232,7 +232,7 @@ export class TablePipeline {
     if (this._rowEventHandlers && Object.keys(this._rowEventHandlers)?.length) {
       result.rowEventHandlers = this._rowEventHandlers;
     }
-    Object.keys(this._tableProps || {}).map(key => {
+    Object.keys(this._tableProps || {}).map((key) => {
       if (this._tableProps[key]?.length) {
         const first = this._tableProps[key][0];
         // 如果是方法 需要合并 否则取最后一个
@@ -247,7 +247,7 @@ export class TablePipeline {
                 ?.map((item: any, index) => {
                   return item(...args);
                 })
-                .filter(p => p) as string[];
+                .filter((p) => p) as string[];
               return classNames.join(' ');
             }
             if (key === 'rowRenderer') {
@@ -298,7 +298,7 @@ export class TablePipeline {
     if (!this._rowEventHandlers[eventName]) {
       this._rowEventHandlers[eventName] = func;
     } else {
-      this._rowEventHandlers[eventName] = args => {
+      this._rowEventHandlers[eventName] = (args) => {
         this._rowEventHandlers[eventName](args);
         func(args);
       };
