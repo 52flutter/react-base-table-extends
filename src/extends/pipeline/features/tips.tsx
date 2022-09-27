@@ -2,7 +2,7 @@
  * @Author: renjie.yin
  * @Date: 2021-03-15 17:21:04
  * @LastEditors: renjie.yin
- * @LastEditTime: 2022-09-27 16:47:37
+ * @LastEditTime: 2022-09-27 17:02:54
  * @Description:
  */
 import React from 'react';
@@ -20,7 +20,7 @@ export function tips(opts?: { all: boolean }) {
       makeRecursiveMapper((col) => {
         if (opts?.all && col.features?.tips === false) {
           return col;
-        } else if (!col.features?.tips) {
+        } else if (!col.features?.tips && opts?.all !== true) {
           return col;
         }
         // const Balloon = pipeline.ctx.components.Balloon;
