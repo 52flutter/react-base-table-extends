@@ -1,33 +1,26 @@
+/*
+ * @Author: renjie.yin
+ * @Date: 2021-03-15 17:21:04
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-09-27 16:47:37
+ * @Description:
+ */
 import React from 'react';
 import { TablePipeline } from '../pipeline';
-import styled from 'styled-components';
-import { icons } from '../utils/common-view';
+
 import {
   makeRecursiveMapper,
   safeHeaderRender,
   safeRender,
 } from '../utils/utils';
 
-const HeaderCellWithTips = styled.div`
-  display: flex;
-  align-items: center;
-
-  .tip-icon-wrapper {
-    margin-left: 2px;
-    margin-right: 1px;
-  }
-
-  .tip-icon {
-    display: flex;
-    fill: currentColor;
-  }
-`;
-
-export function tips() {
+export function tips(opts?: { all: boolean }) {
   return function tipsSetup(pipeline: TablePipeline) {
     return pipeline.mapColumns(
-      makeRecursiveMapper(col => {
-        if (!col.features?.tips) {
+      makeRecursiveMapper((col) => {
+        if (opts?.all && col.features?.tips === false) {
+          return col;
+        } else if (!col.features?.tips) {
           return col;
         }
         // const Balloon = pipeline.ctx.components.Balloon;
@@ -38,12 +31,6 @@ export function tips() {
             '使用 tips 之前需要通过 pipeline context 设置 components.Tooltip',
           );
         }
-        const justifyContent =
-          col.align === 'right'
-            ? 'flex-end'
-            : col.align === 'center'
-            ? 'center'
-            : 'flex-start';
 
         return {
           ...col,
