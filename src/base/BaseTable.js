@@ -408,7 +408,11 @@ class BaseTable extends React.PureComponent {
     const rowProps = {
       ...extraProps,
       role: 'row',
-      key: `row-${rowKey}`,
+      key: `row-${
+        typeof rowKey === 'object' && rowKey?.toString
+          ? rowKey.toString()
+          : rowKey
+      }`,
       isScrolling,
       className,
       style,

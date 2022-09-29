@@ -155,6 +155,14 @@ export class TablePipeline {
     this._data = input.data;
     this._columns = input.columns;
     this._otherProps = otherProps;
+    if (this._otherProps?.rowEventHandlers) {
+      Object.keys(this._otherProps?.rowEventHandlers ?? {}).forEach((p) => {
+        this.appendRowEventHandlers(
+          p,
+          this._otherProps!.rowEventHandlers![p] as any,
+        );
+      });
+    }
 
     this.snapshot('input');
 

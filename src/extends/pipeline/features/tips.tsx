@@ -2,7 +2,7 @@
  * @Author: renjie.yin
  * @Date: 2021-03-15 17:21:04
  * @LastEditors: renjie.yin
- * @LastEditTime: 2022-09-27 17:02:54
+ * @LastEditTime: 2022-09-27 17:19:49
  * @Description:
  */
 import React from 'react';
@@ -55,7 +55,11 @@ export function tips(opts?: { all: boolean }) {
             // );
           },
           cellRenderer: (args: any) => {
-            return <Tooltip>{safeRender(col, args)}</Tooltip>;
+            const res = safeRender(col, args);
+            if (typeof res === 'string') {
+              return <Tooltip>{safeRender(col, args)}</Tooltip>;
+            }
+            return res;
           },
         };
       }),
