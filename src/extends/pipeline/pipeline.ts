@@ -306,8 +306,9 @@ export class TablePipeline {
     if (!this._rowEventHandlers[eventName]) {
       this._rowEventHandlers[eventName] = func;
     } else {
+      let oldFunc = this._rowEventHandlers[eventName];
       this._rowEventHandlers[eventName] = (args) => {
-        this._rowEventHandlers[eventName](args);
+        oldFunc(args);
         func(args);
       };
     }

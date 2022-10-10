@@ -593,8 +593,10 @@ class BaseTable extends React.PureComponent {
       sorting = order === SortOrder.ASC || order === SortOrder.DESC;
       sortOrder = sorting ? order : SortOrder.ASC;
     } else {
-      sorting = column.key === sortBy.key;
-      sortOrder = sorting ? sortBy.order : SortOrder.ASC;
+      if (sortBy?.key !== undefined && column.key !== undefined) {
+        sorting = column.key === sortBy.key;
+        sortOrder = sorting ? sortBy.order : SortOrder.ASC;
+      }
     }
 
     const cellCls = callOrReturn(headerClassName, {
