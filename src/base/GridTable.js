@@ -217,7 +217,7 @@ class GridTable extends React.PureComponent {
                   : estimatedRowHeight
               }
               rowCount={data.length}
-              overscanRowCount={overscanRowCount}
+              // overscanRowCount={overscanRowCount}
               columnWidth={estimatedRowHeight ? this._getBodyWidth : bodyWidth}
               columnCount={1}
               overscanColumnCount={0}

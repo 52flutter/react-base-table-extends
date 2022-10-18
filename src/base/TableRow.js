@@ -132,7 +132,7 @@ class TableRow extends React.PureComponent {
     const { style, rowKey, onRowHeightChange, rowIndex, columns } = this.props;
     const height = this.ref.getBoundingClientRect().height;
     this.setState({ measured: true }, () => {
-      if (initialMeasure || height !== style.height)
+      if ((initialMeasure || height !== style.height) && height !== 0)
         onRowHeightChange(
           rowKey,
           height,
@@ -145,10 +145,10 @@ class TableRow extends React.PureComponent {
   _getEventHandlers(handlers = {}) {
     const { rowData, rowIndex, rowKey, onRowHover } = this.props;
     const eventHandlers = {};
-    Object.keys(handlers).forEach(eventKey => {
+    Object.keys(handlers).forEach((eventKey) => {
       const callback = handlers[eventKey];
       if (typeof callback === 'function') {
-        eventHandlers[eventKey] = event => {
+        eventHandlers[eventKey] = (event) => {
           callback({ rowData, rowIndex, rowKey, event });
         };
       }
@@ -156,7 +156,7 @@ class TableRow extends React.PureComponent {
 
     if (onRowHover) {
       const mouseEnterHandler = eventHandlers['onMouseEnter'];
-      eventHandlers['onMouseEnter'] = event => {
+      eventHandlers['onMouseEnter'] = (event) => {
         onRowHover({
           hovered: true,
           rowData,
@@ -168,7 +168,7 @@ class TableRow extends React.PureComponent {
       };
 
       const mouseLeaveHandler = eventHandlers['onMouseLeave'];
-      eventHandlers['onMouseLeave'] = event => {
+      eventHandlers['onMouseLeave'] = (event) => {
         onRowHover({
           hovered: false,
           rowData,
