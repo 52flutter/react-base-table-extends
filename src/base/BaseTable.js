@@ -991,9 +991,9 @@ class BaseTable extends React.PureComponent {
     });
   }
 
-  _getIsResetting() {
+  _getIsResetting = () => {
     return this._isResetting;
-  }
+  };
 
   _getHeaderHeight() {
     const { headerHeight } = this.props;
