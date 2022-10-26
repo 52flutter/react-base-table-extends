@@ -935,6 +935,7 @@ class BaseTable extends React.PureComponent {
     };
     const cls = cn(classPrefix, className, {
       [`${classPrefix}--fixed`]: fixed,
+      [`${classPrefix}--sticky`]: sticky,
       [`${classPrefix}--expandable`]: !!expandColumnKey,
       [`${classPrefix}--empty`]: data.length === 0,
       [`${classPrefix}--has-frozen-rows`]: frozenData.length > 0,
