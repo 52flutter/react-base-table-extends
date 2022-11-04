@@ -379,6 +379,7 @@ class BaseTable extends React.PureComponent {
       expandColumnKey,
       estimatedRowHeight,
       stripe = true,
+      minEstimatedRowHeight = 0,
     } = this.props;
     // console.log('columnsRow', columns);
     const rowClass = callOrReturn(rowClassName, { columns, rowData, rowIndex });
@@ -413,6 +414,7 @@ class BaseTable extends React.PureComponent {
           ? rowKey.toString()
           : rowKey
       }`,
+      minEstimatedRowHeight,
       isScrolling,
       className,
       style,
@@ -1292,7 +1294,8 @@ BaseTable.defaultProps = {
   // 虚拟化
   // virtual: false,
   classPrefix: 'BaseTable',
-  sticky: true,
+  sticky: false,
+  minEstimatedRowHeight: 0,
   rowKey: 'id',
   data: [],
   frozenData: [],
@@ -1376,6 +1379,8 @@ BaseTable.propTypes = {
    * The callback is of the shape of `({ rowData, rowIndex }) => number`
    */
   estimatedRowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+
+  minEstimatedRowHeight: PropTypes.number,
   /**
    * The height of the table header, set to 0 to hide the header, could be an array to render multi headers.
    */
