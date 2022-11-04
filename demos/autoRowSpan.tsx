@@ -2,7 +2,7 @@
  * @Author: renjie.yin
  * @Date: 2022-10-25 20:26:20
  * @LastEditors: renjie.yin
- * @LastEditTime: 2022-10-26 10:55:37
+ * @LastEditTime: 2022-11-04 14:21:19
  * @Description:
  */
 import React from 'react';
@@ -48,7 +48,8 @@ export default function Index() {
         {...props}
         width={1000}
         height={400}
-        // sticky={false}
+        sticky={true}
+        // virtual={false}
       />
     </>
   );

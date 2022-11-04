@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { FixedSizeGrid, VariableSizeGrid } from './window';
 import memoize from 'memoize-one';
-
 import Header from './TableHeader';
 import { getEstimatedTotalRowsHeight, isObjectEqual } from './utils';
 
@@ -165,6 +164,7 @@ class GridTable extends React.PureComponent {
       style,
       virtual,
       onScrollbarPresenceChange,
+      sticky,
       ...rest
     } = this.props;
     const headerHeight = this._getHeaderHeight();
@@ -182,7 +182,8 @@ class GridTable extends React.PureComponent {
     if (
       useIsScrolling === true ||
       estimatedRowHeight ||
-      this.props.onEndReached
+      this.props.onEndReached ||
+      sticky
     ) {
       isVirtual = true;
     }

@@ -60,6 +60,7 @@ class TableRow extends React.PureComponent {
       onRowHover,
       onRowExpand,
       onRowHeightChange,
+      minEstimatedRowHeight,
       ...rest
     } = this.props;
     /* eslint-enable no-unused-vars */
