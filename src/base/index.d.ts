@@ -160,6 +160,7 @@ export class Column<T = unknown> extends React.Component<ColumnShape<T>> {
 }
 
 export interface BaseTableProps<T = any> {
+  footerData?: T[];
   minEstimatedRowHeight?: number;
   // 启用sticky来实现固定列 默认true
   sticky?: boolean;

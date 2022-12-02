@@ -1291,6 +1291,7 @@ BaseTable.Column = Column;
 BaseTable.PlaceholderKey = ColumnManager.PlaceholderKey;
 
 BaseTable.defaultProps = {
+  footerData: [],
   // 虚拟化
   // virtual: false,
   classPrefix: 'BaseTable',

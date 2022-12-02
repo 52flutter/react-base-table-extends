@@ -1,3 +1,10 @@
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-04-14 11:32:30
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-12-02 19:04:38
+ * @Description:
+ */
 import React, { useState, useEffect } from 'react';
 import {
   useTablePipeline,
@@ -34,6 +41,7 @@ export default function Index() {
         columns={columns}
         width={1000}
         height={400}
+        // footerData={data.slice(0, 2)}
       />
     </>
   );

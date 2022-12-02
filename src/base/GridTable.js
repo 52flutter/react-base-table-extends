@@ -14,7 +14,7 @@ class GridTable extends React.PureComponent {
     super(props);
 
     this._setDivBodyRef = this._setDivBodyRef.bind(this);
-
+    this._setFooterRef = this._setFooterRef.bind(this);
     this._setHeaderRef = this._setHeaderRef.bind(this);
     this._setBodyRef = this._setBodyRef.bind(this);
     this._setInnerRef = this._setInnerRef.bind(this);
@@ -44,11 +44,13 @@ class GridTable extends React.PureComponent {
 
   forceUpdateTable() {
     this.headerRef && this.headerRef.forceUpdate();
+    this.footerRef && this.footerRef.forceUpdate();
     this.bodyRef && this.bodyRef.forceUpdate();
   }
 
   scrollToPosition(args) {
     this.headerRef && this.headerRef.scrollTo(args.scrollLeft);
+    this.footerRef && this.footerRef.scrollTo(args.scrollLeft);
     if (isObjectEqual(this.lastScrollArgs, args)) {
       return;
     }
@@ -76,7 +78,7 @@ class GridTable extends React.PureComponent {
 
   scrollToLeft(scrollLeft) {
     this.headerRef && this.headerRef.scrollTo(scrollLeft);
-
+    this.footerRef && this.footerRef.scrollTo(scrollLeft);
     if (this.lastScrollArgs && this.lastScrollArgs.scrollLeft === scrollLeft) {
       return;
     }
@@ -163,6 +165,7 @@ class GridTable extends React.PureComponent {
       // omit from rest
       style,
       virtual,
+      footerData,
       onScrollbarPresenceChange,
       sticky,
       ...rest
@@ -170,6 +173,8 @@ class GridTable extends React.PureComponent {
     const headerHeight = this._getHeaderHeight();
     const frozenRowCount = frozenData.length;
     const frozenRowsHeight = rowHeight * frozenRowCount;
+
+    const footerRowsHeight = rowHeight * (footerData?.length ?? 0);
     const cls = cn(`${classPrefix}__table`, className);
     const containerProps = containerStyle ? { style: containerStyle } : null;
     const Grid = estimatedRowHeight ? VariableSizeGrid : FixedSizeGrid;
@@ -189,13 +194,36 @@ class GridTable extends React.PureComponent {
     }
     return (
       <div role="table" className={cls} {...containerProps}>
+        {footerData?.length > 0 && (
+          // put header after body and reverse the display order via css
+          // to prevent header's shadow being covered by body
+          <Header
+            {...rest}
+            className={`${classPrefix}__footer__frozen`}
+            ref={this._setFooterRef}
+            data={data}
+            frozenData={footerData}
+            width={width}
+            height={rowHeight * footerData.length}
+            rowWidth={headerWidth}
+            rowHeight={rowHeight}
+            headerHeight={0}
+            headerRenderer={this.props.headerRenderer}
+            rowRenderer={this.props.rowRenderer}
+            // hoveredRowKey={frozenRowCount > 0 ? hoveredRowKey : null}
+          />
+        )}
+
         {isVirtual === false ? (
           <div
             className={`${classPrefix}__body`}
             ref={this._setDivBodyRef}
             style={{
               width: width,
-              height: Math.max(height - headerHeight - frozenRowsHeight, 0),
+              height: Math.max(
+                height - headerHeight - frozenRowsHeight - footerRowsHeight,
+                0,
+              ),
               overflowY: 'auto',
               overflowX: bodyWidth > width ? 'auto' : 'hidden',
             }}
@@ -241,7 +269,10 @@ class GridTable extends React.PureComponent {
             data={data}
             frozenData={frozenData}
             width={width}
-            height={Math.max(height - headerHeight - frozenRowsHeight, 0)}
+            height={Math.max(
+              height - headerHeight - frozenRowsHeight - footerRowsHeight,
+              0,
+            )}
             rowHeight={estimatedRowHeight ? getRowHeight : rowHeight}
             estimatedRowHeight={
               typeof estimatedRowHeight === 'function'
@@ -289,6 +320,10 @@ class GridTable extends React.PureComponent {
   }
   _setHeaderRef(ref) {
     this.headerRef = ref;
+  }
+
+  _setFooterRef(ref) {
+    this.footerRef = ref;
   }
 
   _setBodyRef(ref) {
