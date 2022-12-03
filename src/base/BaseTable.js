@@ -1044,6 +1044,11 @@ class BaseTable extends React.PureComponent {
     return frozenData.length * rowHeight;
   }
 
+  _getFooterRowsHeight() {
+    const { footerData = [], rowHeight } = this.props;
+    return footerData.length * rowHeight;
+  }
+
   _getTableHeight() {
     const { height, maxHeight, footerHeight } = this.props;
     let tableHeight = height - footerHeight;
@@ -1052,10 +1057,12 @@ class BaseTable extends React.PureComponent {
       const frozenRowsHeight = this._getFrozenRowsHeight();
       const totalRowsHeight = this.getTotalRowsHeight();
       const headerHeight = this._getHeaderHeight();
+      const footerRowsHeight = this._getFooterRowsHeight();
       const totalHeight =
         headerHeight +
         frozenRowsHeight +
         totalRowsHeight +
+        footerRowsHeight +
         this._horizontalScrollbarSize;
       tableHeight = Math.min(totalHeight, maxHeight - footerHeight);
     }
@@ -1067,7 +1074,8 @@ class BaseTable extends React.PureComponent {
     return (
       this._getTableHeight() -
       this._getHeaderHeight() -
-      this._getFrozenRowsHeight()
+      this._getFrozenRowsHeight() -
+      this._getFooterRowsHeight()
     );
   }
 
@@ -1083,7 +1091,8 @@ class BaseTable extends React.PureComponent {
     const totalHeight =
       this.getTotalRowsHeight() +
       this._getHeaderHeight() +
-      this._getFrozenRowsHeight();
+      this._getFrozenRowsHeight() +
+      this._getFooterRowsHeight();
     return Math.min(tableHeight, totalHeight);
   }
 
