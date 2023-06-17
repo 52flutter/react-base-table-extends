@@ -76,7 +76,7 @@ export function treeMode(opts: TreeModeFeatureOptions = {}) {
       const expanded = openKeySet.has(rowKey);
       if (expanded) {
         onChangeOpenKeys(
-          openKeys.filter(key => key !== rowKey),
+          openKeys.filter((key) => key !== rowKey),
           rowKey,
           'collapse',
         );
@@ -96,7 +96,7 @@ export function treeMode(opts: TreeModeFeatureOptions = {}) {
     const indentSize = opts.indentSize ?? ctx.indents.indentSize;
     const [firstCol, ...others] = pipeline.getColumns();
 
-    pipeline.appendTableProps('cellProps', args => {
+    pipeline.appendTableProps('cellProps', (args) => {
       const { rowData, column } = args;
       if (column.key === firstCol.key) {
         if (rowData[treeMetaKey] == null) {
@@ -176,9 +176,10 @@ export function treeMode(opts: TreeModeFeatureOptions = {}) {
         if (isLeaf) {
           return (
             <InlineFlexCell className="expansion-cell leaf">
-              <span style={{ marginLeft: indent + iconWidth + iconGap }}>
-                {content}
-              </span>
+              <div
+                style={{ width: indent + iconWidth + iconGap, height: 0 }}
+              ></div>
+              <span>{content}</span>
             </InlineFlexCell>
           );
         }
@@ -200,11 +201,12 @@ export function treeMode(opts: TreeModeFeatureOptions = {}) {
             }}
             onClick={clickArea === 'content' ? onClick : undefined}
           >
+            <div style={{ width: indent, height: 0 }}></div>
             <icons.CaretRight
               className={cx('expansion-icon', expandCls)}
               style={{
                 cursor: clickArea === 'icon' ? 'pointer' : undefined,
-                marginLeft: indent,
+                // marginLeft: indent,
                 marginRight: iconGap,
               }}
               onClick={clickArea === 'icon' ? onClick : undefined}
