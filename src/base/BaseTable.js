@@ -673,6 +673,7 @@ class BaseTable extends React.PureComponent {
         {cell}
         {column.sortable && (
           <SortIndicator
+            sorting={sorting}
             sortOrder={sortOrder}
             className={cn(this._prefixClass('sort-indicator'), {
               [this._prefixClass('sort-indicator--descending')]:

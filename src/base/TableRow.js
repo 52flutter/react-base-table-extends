@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { renderElement } from './utils';
 
+// function TableRow(props) {
+//   const [measured, setMeasured] = useState(false);
+//   const rowRef = useRef();
+
+//   useLayoutEffect(()=>{
+
+//   },[])
+// }
 /**
  * Row component for BaseTable
  */
@@ -18,10 +26,17 @@ class TableRow extends React.PureComponent {
     this._handleExpand = this._handleExpand.bind(this);
   }
 
+  timer;
+
   componentDidMount() {
-    this.props.estimatedRowHeight &&
-      this.props.rowIndex >= 0 &&
-      this._measureHeight(true);
+    if (this.props.estimatedRowHeight && this.props.rowIndex >= 0) {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+      this.timer = setTimeout(() => {
+        this._measureHeight(true);
+      }, 0);
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -138,16 +153,19 @@ class TableRow extends React.PureComponent {
       columns,
       minEstimatedRowHeight = 0,
     } = this.props;
-    const height = this.ref.getBoundingClientRect().height;
+    // const height = this.ref.getBoundingClientRect().height;
+    const height = this.ref?.offsetHeight;
     this.setState({ measured: true }, () => {
       const _height = Math.max(minEstimatedRowHeight, height);
-      if ((initialMeasure || _height !== style.height) && _height !== 0)
+
+      if ((initialMeasure || _height !== style.height) && _height !== 0) {
         onRowHeightChange(
           rowKey,
           _height,
           rowIndex,
           columns[0] && !columns[0].__placeholder__ && columns[0].frozen,
         );
+      }
     });
   }
 
