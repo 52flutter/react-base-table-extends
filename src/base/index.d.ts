@@ -160,6 +160,10 @@ export class Column<T = unknown> extends React.Component<ColumnShape<T>> {
 }
 
 export interface BaseTableProps<T = any> {
+  footerData?: T[];
+  minEstimatedRowHeight?: number;
+  // 启用sticky来实现固定列 默认true
+  sticky?: boolean;
   // 是否开启虚拟滚动 默认大于100条开启 开启下拉加载更多或者useIsScrolling时候会为true 无法关闭
   virtual?: boolean;
   /** 奇偶行颜色 */

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { bool } from 'prop-types';
 import cn from 'classnames';
 import memoize from 'memoize-one';
 
@@ -379,8 +379,9 @@ class BaseTable extends React.PureComponent {
       expandColumnKey,
       estimatedRowHeight,
       stripe = true,
+      minEstimatedRowHeight = 0,
     } = this.props;
-
+    // console.log('columnsRow', columns);
     const rowClass = callOrReturn(rowClassName, { columns, rowData, rowIndex });
     const extraProps = callOrReturn(this.props.rowProps, {
       columns,
@@ -413,6 +414,7 @@ class BaseTable extends React.PureComponent {
           ? rowKey.toString()
           : rowKey
       }`,
+      minEstimatedRowHeight,
       isScrolling,
       className,
       style,
@@ -449,7 +451,8 @@ class BaseTable extends React.PureComponent {
     rowIndex,
     expandIcon,
   }) {
-    if (column[ColumnManager.PlaceholderKey]) {
+    const { sticky } = this.props;
+    if (column[ColumnManager.PlaceholderKey] && !sticky) {
       return (
         <div
           key={`row-${rowData[this.props.rowKey]}-cell-${
@@ -497,6 +500,10 @@ class BaseTable extends React.PureComponent {
         column.align === Alignment.CENTER,
       [this._prefixClass('row-cell--align-right')]:
         column.align === Alignment.RIGHT,
+      [this._prefixClass('col-fixed-left')]:
+        sticky && (column.frozen === 'left' || column.frozen === true),
+      [this._prefixClass('col-fixed-right')]:
+        sticky && column.frozen === 'right',
     });
 
     const extraProps = callOrReturn(this.props.cellProps, {
@@ -517,6 +524,14 @@ class BaseTable extends React.PureComponent {
         style={{
           ...this.columnManager.getColumnStyle(column.key),
           ...(rest || {}).style,
+          left:
+            sticky && column.frozen && column.frozen !== 'right'
+              ? this.columnManager.getColumnLeftWidth(column.key)
+              : undefined,
+          right:
+            sticky && column.frozen === 'right'
+              ? this.columnManager.getColumnRightWidth(column.key)
+              : undefined,
         }}
       >
         {expandIcon}
@@ -557,7 +572,8 @@ class BaseTable extends React.PureComponent {
   }
 
   renderHeaderCell({ columns, column, columnIndex, headerIndex, expandIcon }) {
-    if (column[ColumnManager.PlaceholderKey]) {
+    const { sortBy, sortState, headerCellProps, sticky } = this.props;
+    if (column[ColumnManager.PlaceholderKey] && sticky === false) {
       return (
         <div
           key={`header-${headerIndex}-cell-${column.key}-placeholder`}
@@ -568,7 +584,7 @@ class BaseTable extends React.PureComponent {
     }
 
     const { headerClassName, headerRenderer } = column;
-    const { sortBy, sortState, headerCellProps } = this.props;
+
     const TableHeaderCell = this._getComponent('TableHeaderCell');
     const SortIndicator = this._getComponent('SortIndicator');
 
@@ -614,6 +630,10 @@ class BaseTable extends React.PureComponent {
       [this._prefixClass('header-cell--sorting')]: sorting,
       [this._prefixClass('header-cell--resizing')]:
         column.key === this.state.resizingKey,
+      [this._prefixClass('col-fixed-left')]:
+        sticky && (column.frozen === 'left' || column.frozen === true),
+      [this._prefixClass('col-fixed-right')]:
+        sticky && column.frozen === 'right',
     });
     const extraProps = callOrReturn(headerCellProps, {
       columns,
@@ -623,16 +643,29 @@ class BaseTable extends React.PureComponent {
     });
     const { tagName, ...rest } = extraProps || {};
     const Tag = tagName || 'div';
+    // console.log('column', column);
     return (
       <Tag
         role="gridcell"
         key={`header-${headerIndex}-cell-${column.key}`}
         onClick={column.sortable ? this._handleColumnSort : null}
         {...rest}
-        className={cn(cls, (rest || {}).className)}
+        className={cn(
+          cls,
+
+          (rest || {}).className,
+        )}
         style={{
           ...this.columnManager.getColumnStyle(column.key),
           ...(rest || {}).style,
+          left:
+            sticky && column.frozen && column.frozen !== 'right'
+              ? this.columnManager.getColumnLeftWidth(column.key)
+              : undefined,
+          right:
+            sticky && column.frozen === 'right'
+              ? this.columnManager.getColumnRightWidth(column.key)
+              : undefined,
         }}
         data-key={column.key}
       >
@@ -640,6 +673,7 @@ class BaseTable extends React.PureComponent {
         {cell}
         {column.sortable && (
           <SortIndicator
+            sorting={sorting}
             sortOrder={sortOrder}
             className={cn(this._prefixClass('sort-indicator'), {
               [this._prefixClass('sort-indicator--descending')]:
@@ -667,6 +701,7 @@ class BaseTable extends React.PureComponent {
       rowHeight,
       fixed,
       estimatedRowHeight,
+      sticky,
       ...rest
     } = this.props;
     const height = this._getTableHeight();
@@ -684,7 +719,7 @@ class BaseTable extends React.PureComponent {
         className={this._prefixClass('table-main')}
         ref={this._setMainTableRef}
         data={this._data}
-        columns={this.columnManager.getMainColumns()}
+        columns={this.columnManager.getMainColumns(sticky)}
         width={width}
         height={height}
         headerHeight={headerHeight}
@@ -867,6 +902,7 @@ class BaseTable extends React.PureComponent {
 
   render() {
     const {
+      sticky,
       columns,
       children,
       width,
@@ -902,6 +938,7 @@ class BaseTable extends React.PureComponent {
     };
     const cls = cn(classPrefix, className, {
       [`${classPrefix}--fixed`]: fixed,
+      [`${classPrefix}--sticky`]: sticky,
       [`${classPrefix}--expandable`]: !!expandColumnKey,
       [`${classPrefix}--empty`]: data.length === 0,
       [`${classPrefix}--has-frozen-rows`]: frozenData.length > 0,
@@ -914,8 +951,8 @@ class BaseTable extends React.PureComponent {
       <div ref={this._setContainerRef} className={cls} style={containerStyle}>
         {this.renderFooter()}
         {this.renderMainTable()}
-        {this.renderLeftTable()}
-        {this.renderRightTable()}
+        {sticky === false && this.renderLeftTable()}
+        {sticky === false && this.renderRightTable()}
         {this.renderResizingLine()}
         {this.renderEmptyLayer()}
         {this.renderOverlay()}
@@ -1008,6 +1045,11 @@ class BaseTable extends React.PureComponent {
     return frozenData.length * rowHeight;
   }
 
+  _getFooterRowsHeight() {
+    const { footerData = [], rowHeight } = this.props;
+    return footerData.length * rowHeight;
+  }
+
   _getTableHeight() {
     const { height, maxHeight, footerHeight } = this.props;
     let tableHeight = height - footerHeight;
@@ -1016,10 +1058,12 @@ class BaseTable extends React.PureComponent {
       const frozenRowsHeight = this._getFrozenRowsHeight();
       const totalRowsHeight = this.getTotalRowsHeight();
       const headerHeight = this._getHeaderHeight();
+      const footerRowsHeight = this._getFooterRowsHeight();
       const totalHeight =
         headerHeight +
         frozenRowsHeight +
         totalRowsHeight +
+        footerRowsHeight +
         this._horizontalScrollbarSize;
       tableHeight = Math.min(totalHeight, maxHeight - footerHeight);
     }
@@ -1031,7 +1075,8 @@ class BaseTable extends React.PureComponent {
     return (
       this._getTableHeight() -
       this._getHeaderHeight() -
-      this._getFrozenRowsHeight()
+      this._getFrozenRowsHeight() -
+      this._getFooterRowsHeight()
     );
   }
 
@@ -1047,7 +1092,8 @@ class BaseTable extends React.PureComponent {
     const totalHeight =
       this.getTotalRowsHeight() +
       this._getHeaderHeight() +
-      this._getFrozenRowsHeight();
+      this._getFrozenRowsHeight() +
+      this._getFooterRowsHeight();
     return Math.min(tableHeight, totalHeight);
   }
 
@@ -1255,9 +1301,12 @@ BaseTable.Column = Column;
 BaseTable.PlaceholderKey = ColumnManager.PlaceholderKey;
 
 BaseTable.defaultProps = {
+  footerData: [],
   // 虚拟化
   // virtual: false,
   classPrefix: 'BaseTable',
+  sticky: false,
+  minEstimatedRowHeight: 0,
   rowKey: 'id',
   data: [],
   frozenData: [],
@@ -1286,6 +1335,7 @@ BaseTable.defaultProps = {
 };
 
 BaseTable.propTypes = {
+  sticky: PropTypes.bool,
   /**
    * Prefix for table's inner className
    */
@@ -1340,6 +1390,8 @@ BaseTable.propTypes = {
    * The callback is of the shape of `({ rowData, rowIndex }) => number`
    */
   estimatedRowHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
+
+  minEstimatedRowHeight: PropTypes.number,
   /**
    * The height of the table header, set to 0 to hide the header, could be an array to render multi headers.
    */

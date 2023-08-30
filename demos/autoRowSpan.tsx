@@ -1,3 +1,10 @@
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-10-25 20:26:20
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-11-04 14:21:19
+ * @Description:
+ */
 import React from 'react';
 import {
   useTablePipeline,
@@ -14,14 +21,18 @@ export default function Index() {
   const data = generateData(columns, 200);
 
   columns[0].getCellSpan = () => {
-    return { span: 3 };
+    return { span: 0 };
   };
+  columns[0].frozen = 'left';
+  columns[4].frozen = 'right';
+  columns[9].frozen = 'right';
 
-  const pipeline = useTablePipeline()
-    .input({ data, columns: columns })
-    .use(features.autoRowSpan())
-    .use(features.autoCellSpan());
+  const pipeline = useTablePipeline().input({ data, columns: columns });
+  // .use(features.autoRowSpan())
+  // .use(features.autoCellSpan());
   const props = pipeline.getProps();
+
+  console.log('props.columns', props.columns);
   return (
     <>
       <Button
@@ -31,7 +42,15 @@ export default function Index() {
       >
         导出
       </Button>
-      <BaseTable fixed={true} border {...props} width={1000} height={400} />
+      <BaseTable
+        fixed={true}
+        border
+        {...props}
+        width={1000}
+        height={400}
+        sticky={true}
+        // virtual={false}
+      />
     </>
   );
 }

@@ -76,7 +76,7 @@ export function rowDetail(opts: RowDetailFeatureOptions = {}) {
     const clickArea = opts.clickArea ?? 'icon';
 
     const getDetailKey =
-      opts.getDetailKey ?? (row => row[primaryKey] + '_detail');
+      opts.getDetailKey ?? ((row) => row[primaryKey] + '_detail');
     const renderDetail = opts.renderDetail ?? fallbackRenderDetail;
     const hasDetail = opts.hasDetail ?? always(true);
 
@@ -87,7 +87,7 @@ export function rowDetail(opts: RowDetailFeatureOptions = {}) {
         ? pipeline
             .getDataSource()
             .filter(hasDetail)
-            .map(row => row[primaryKey])
+            .map((row) => row[primaryKey])
         : opts.defaultOpenKeys) ??
       [];
     const onChangeOpenKeys: RowDetailFeatureOptions['onChangeOpenKeys'] = (
@@ -105,7 +105,7 @@ export function rowDetail(opts: RowDetailFeatureOptions = {}) {
       const expanded = openKeySet.has(rowKey);
       if (expanded) {
         onChangeOpenKeys(
-          openKeys.filter(key => key !== rowKey),
+          openKeys.filter((key) => key !== rowKey),
           rowKey,
           'collapse',
         );
@@ -113,10 +113,7 @@ export function rowDetail(opts: RowDetailFeatureOptions = {}) {
         onChangeOpenKeys([...openKeys, rowKey], rowKey, 'expand');
       }
     };
-    pipeline.appendTableProps(
-      'estimatedRowHeight',
-      pipeline.getRowHeight() + 1,
-    );
+    pipeline.appendTableProps('estimatedRowHeight', pipeline.getRowHeight());
     pipeline.appendTableProps('virtual', true);
     return pipeline
       .data(
@@ -142,11 +139,11 @@ export function rowDetail(opts: RowDetailFeatureOptions = {}) {
         return columns;
       }
       // 将frozen置空
-      columns.forEach(p => (p.frozen = undefined));
+      columns.forEach((p) => (p.frozen = undefined));
       const [firstCol, ...others] = columns;
 
       if (clickArea === 'cell') {
-        pipeline.appendTableProps('cellProps', args => {
+        pipeline.appendTableProps('cellProps', (args) => {
           if (args.column.key === firstCol.key) {
             return {
               onClick(e: any) {
@@ -218,7 +215,7 @@ export function rowDetail(opts: RowDetailFeatureOptions = {}) {
           </ExpansionCell>
         );
       };
-      pipeline.appendTableProps('rowRenderer', args => {
+      pipeline.appendTableProps('rowRenderer', (args) => {
         const { rowData, cells, columns } = args;
         if (rowData[rowDetailMetaKey]) {
           return cellRenderer(args as any);

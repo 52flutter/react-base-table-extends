@@ -1,3 +1,10 @@
+/*
+ * @Author: renjie.yin
+ * @Date: 2022-04-14 11:32:30
+ * @LastEditors: renjie.yin
+ * @LastEditTime: 2022-12-02 19:17:46
+ * @Description:
+ */
 import React, { useState, useEffect } from 'react';
 import {
   useTablePipeline,
@@ -30,10 +37,11 @@ export default function Index() {
       <BaseTable
         // virtual={true}
         fixed
-        data={data}
+        data={data.slice(0, 5)}
         columns={columns}
         width={1000}
         height={400}
+        footerData={data.slice(0, 1)}
       />
     </>
   );

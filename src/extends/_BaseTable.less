@@ -85,12 +85,14 @@
           padding-right: @table-padding-right;
         }
       }
+
       outline: @border;
       left: 0;
 
       .@{table-prefix}__header {
         background-color: @header-background-color;
       }
+
       .@{table-prefix}__header-cell {
         background-color: @header-background-color;
         border-right: @border;
@@ -112,9 +114,11 @@
           padding-left: @table-padding-left;
         }
       }
+
       & when ((@show-frozen-columns-shadow)) {
         box-shadow: @box-shadow-offset 0 @box-shadow-blur 0 @box-shadow-color;
       }
+
       top: 0;
       left: 0;
 
@@ -135,9 +139,11 @@
           padding-right: @table-padding-right;
         }
       }
+
       & when ((@show-frozen-columns-shadow)) {
         box-shadow: -@box-shadow-offset 0 @box-shadow-blur 0 @box-shadow-color;
       }
+
       top: 0;
       right: 0;
 
@@ -253,6 +259,7 @@
       .@{table-prefix}__column-resizer {
         visibility: visible;
         opacity: 1;
+
         // workaround to prevent header being clicked when resizing stopped on header
         &::after {
           .fill-layout();
@@ -267,6 +274,12 @@
       text-overflow: ellipsis;
       white-space: normal;
     }
+  }
+
+  &__col-fixed-left,
+  &__col-fixed-right {
+    position: sticky;
+    z-index: 2;
   }
 
   &__header-row--resizing {
@@ -327,6 +340,7 @@
     }
   }
 }
+
 .BaseTable__table__hidden__scrollbar {
   .BaseTable__body {
     overflow: hidden !important;

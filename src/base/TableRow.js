@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-
+import { resizeObserver } from './useSize';
 import { renderElement } from './utils';
 
+// function TableRow(props) {
+//   const [measured, setMeasured] = useState(false);
+//   const rowRef = useRef();
+
+//   useLayoutEffect(()=>{
+
+//   },[])
+// }
 /**
  * Row component for BaseTable
  */
@@ -18,24 +26,55 @@ class TableRow extends React.PureComponent {
     this._handleExpand = this._handleExpand.bind(this);
   }
 
-  componentDidMount() {
-    this.props.estimatedRowHeight &&
-      this.props.rowIndex >= 0 &&
-      this._measureHeight(true);
-  }
+  // timer;
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.estimatedRowHeight &&
-      this.props.rowIndex >= 0 &&
-      // should not re-measure if it's updated after measured and reset
-      !this.props.getIsResetting() &&
-      this.state.measured &&
-      prevState.measured
-    ) {
-      this.setState({ measured: false }, () => this._measureHeight());
+  observer;
+
+  componentDidMount() {
+    const { onRowHeightChange, rowKey, rowIndex, columns } = this.props;
+    if (this.props.estimatedRowHeight && this.props.rowIndex >= 0) {
+      // if (this.timer) {
+      //   clearTimeout(this.timer);
+      // }
+      const observer = resizeObserver((el) => {
+        const height = el.offsetHeight;
+
+        onRowHeightChange(
+          rowKey,
+          height,
+          rowIndex,
+          columns[0] && !columns[0].__placeholder__ && columns[0].frozen,
+        );
+        setTimeout(() => {
+          if (!this.unmount) this.setState({ measured: true }, () => {});
+        }, 0);
+      });
+      observer.callbackRef(this.ref);
+      // this.timer = setTimeout(() => {
+      //   this._measureHeight(true);
+      // }, 0);
+      this.observer = observer;
     }
   }
+  unmount = false;
+  componentWillUnmount() {
+    this.unmount = true;
+    if (this.observer) {
+      this.observer.dispose();
+    }
+  }
+  // componentDidUpdate(prevProps, prevState) {
+  // if (
+  //   this.props.estimatedRowHeight &&
+  //   this.props.rowIndex >= 0 &&
+  //   // should not re-measure if it's updated after measured and reset
+  //   !this.props.getIsResetting() &&
+  //   this.state.measured &&
+  //   prevState.measured
+  // ) {
+  //   this.setState({ measured: false }, () => this._measureHeight());
+  // }
+  // }
 
   render() {
     /* eslint-disable no-unused-vars */
@@ -60,6 +99,7 @@ class TableRow extends React.PureComponent {
       onRowHover,
       onRowExpand,
       onRowHeightChange,
+      minEstimatedRowHeight,
       ...rest
     } = this.props;
     /* eslint-enable no-unused-vars */
@@ -78,7 +118,11 @@ class TableRow extends React.PureComponent {
         columnIndex,
         rowData,
         rowIndex,
-        expandIcon: column.key === expandColumnKey && expandIcon,
+        expandIcon:
+          expandColumnKey !== undefined &&
+          expandColumnKey !== null &&
+          column.key === expandColumnKey &&
+          expandIcon,
       }),
     );
 
@@ -129,26 +173,37 @@ class TableRow extends React.PureComponent {
   _measureHeight(initialMeasure) {
     if (!this.ref) return;
 
-    const { style, rowKey, onRowHeightChange, rowIndex, columns } = this.props;
-    const height = this.ref.getBoundingClientRect().height;
+    const {
+      style,
+      rowKey,
+      onRowHeightChange,
+      rowIndex,
+      columns,
+      minEstimatedRowHeight = 0,
+    } = this.props;
+    // const height = this.ref.getBoundingClientRect().height;
+    const height = this.ref?.offsetHeight;
     this.setState({ measured: true }, () => {
-      if (initialMeasure || height !== style.height)
+      const _height = Math.max(minEstimatedRowHeight, height);
+
+      if ((initialMeasure || _height !== style.height) && _height !== 0) {
         onRowHeightChange(
           rowKey,
-          height,
+          _height,
           rowIndex,
           columns[0] && !columns[0].__placeholder__ && columns[0].frozen,
         );
+      }
     });
   }
 
   _getEventHandlers(handlers = {}) {
     const { rowData, rowIndex, rowKey, onRowHover } = this.props;
     const eventHandlers = {};
-    Object.keys(handlers).forEach(eventKey => {
+    Object.keys(handlers).forEach((eventKey) => {
       const callback = handlers[eventKey];
       if (typeof callback === 'function') {
-        eventHandlers[eventKey] = event => {
+        eventHandlers[eventKey] = (event) => {
           callback({ rowData, rowIndex, rowKey, event });
         };
       }
@@ -156,7 +211,7 @@ class TableRow extends React.PureComponent {
 
     if (onRowHover) {
       const mouseEnterHandler = eventHandlers['onMouseEnter'];
-      eventHandlers['onMouseEnter'] = event => {
+      eventHandlers['onMouseEnter'] = (event) => {
         onRowHover({
           hovered: true,
           rowData,
@@ -168,7 +223,7 @@ class TableRow extends React.PureComponent {
       };
 
       const mouseLeaveHandler = eventHandlers['onMouseLeave'];
-      eventHandlers['onMouseLeave'] = event => {
+      eventHandlers['onMouseLeave'] = (event) => {
         onRowHover({
           hovered: false,
           rowData,

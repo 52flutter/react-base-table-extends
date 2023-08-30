@@ -37,7 +37,7 @@ Column.propTypes = {
   /**
    * Title for the column header
    */
-  title: PropTypes.string,
+  // title: PropTypes.oneOfType([PropTypes.string, PropTypes.func,PropTypes.node,PropTypes.element])
   /**
    * Data key for the column cell, could be "a.b.c"
    */
