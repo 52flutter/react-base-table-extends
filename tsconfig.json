@@ -7,17 +7,17 @@
     "importHelpers": true,
     "jsx": "react",
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "sourceMap": true,
     "baseUrl": "./",
     "strict": true,
     "paths": {
-      "types/*":["types/*"],
+      "types/*": ["types/*"],
       "@/*": ["src/*"],
       "@@/*": ["src/.umi/*"]
     },
     "allowSyntheticDefaultImports": true
   },
-  
   "exclude": [
     "node_modules",
     "lib",
