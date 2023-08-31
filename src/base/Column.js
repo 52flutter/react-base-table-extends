@@ -97,6 +97,11 @@ Column.propTypes = {
    * The renderer receives props `{ columns, column, columnIndex, headerIndex, container }`
    */
   headerRenderer: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+  /**
+   * business inject
+   *
+   */
+  type: PropTypes.object,
 };
 
 Column.Alignment = Alignment;

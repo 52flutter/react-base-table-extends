@@ -16,4 +16,5 @@ export {
   flattenOnKeys,
   getScrollbarSize,
   getValue,
+  tableBusinessConfig,
 } from './utils';

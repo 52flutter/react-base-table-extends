@@ -715,3 +715,5 @@ export function flattenOnKeys<T = any>(
 export function getValue(object: any, path?: string, defaultValue?: any): any;
 
 export function getScrollbarSize(recalculate?: boolean): number;
+
+export const tableBusinessConfig: any;
