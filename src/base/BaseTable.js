@@ -31,7 +31,6 @@ import {
   throttle,
   debounce,
   noop,
-  tableBusinessConfig,
 } from './utils';
 
 const getColumns = (columns, children) => columns || normalizeColumns(children);
@@ -62,10 +61,7 @@ class BaseTable extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const { columns: columnsP, children, defaultExpandedRowKeys } = props;
-
-    const columns =
-      tableBusinessConfig?.columnAutoFilll?.(columnsP) || columnsP;
+    const { columns, children, defaultExpandedRowKeys } = props;
 
     this.state = {
       scrollbarSize: 0,
