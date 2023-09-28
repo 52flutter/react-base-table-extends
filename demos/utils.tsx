@@ -134,3 +134,28 @@ export const getTreeData = (columns) => {
   const treeData = unflatten(data);
   return treeData;
 };
+
+export const getPadding = (el: any) => {
+  const style = window.getComputedStyle(el, null);
+  const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+  const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+  return {
+    pLeft: paddingLeft,
+    pRight: paddingRight,
+  };
+};
+
+export const checkEllipsis = (box: any) => {
+  const range = document.createRange();
+  range.setStart(box, 0);
+  range.setEnd(box, box.childNodes.length);
+  let rangeWidth = range.getBoundingClientRect().width;
+  const { pLeft, pRight } = getPadding(box);
+  const horizontalPadding = pLeft + pRight;
+  const boxWidth = box.getBoundingClientRect().width;
+  if (rangeWidth + horizontalPadding > boxWidth + 0.01625) {
+    return true;
+  } else {
+    return false;
+  }
+};

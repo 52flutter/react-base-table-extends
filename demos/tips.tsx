@@ -19,5 +19,5 @@ export default function Index() {
     .input({ data, columns: columns })
     .use(features.tips());
 
-  return <BaseTable {...pipeline.getProps()} width={1000} height={400} />;
+  return <BaseTable {...pipeline.getProps()} width={800} height={400} />;
 }

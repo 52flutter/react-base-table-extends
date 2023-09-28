@@ -6,6 +6,7 @@ import ReactDom from 'react-dom';
 
 import { Popper } from 'react-popper';
 import './texty.less';
+import { checkEllipsis } from './utils';
 // const modifiers: any = [
 //   // {
 //   //   name: 'preventOverflow',
@@ -147,8 +148,8 @@ class Texty extends React.PureComponent<ITextyProps, any> {
     }
 
     const target = this.targetNode;
-    const isTruncated =
-      (!!target && target.scrollWidth > target.offsetWidth) || auto === false;
+    const isTruncated = (!!target && checkEllipsis(target)) || auto === false;
+    // const isTruncated = (!!target && target.scrollWidth > target.offsetWidth) || auto === false;
     const showTooltip = this.state.isHovered && isTruncated;
 
     // console.log('showTooltip', showTooltip, this.props);
@@ -294,9 +295,9 @@ class Texty extends React.PureComponent<ITextyProps, any> {
   handleMouseEnter = (e: any) => {
     const target = this.targetNode;
 
+    // const isTruncated = (!!target && target.scrollWidth > target.offsetWidth) || this.props.auto === false;
     const isTruncated =
-      (!!target && target.scrollWidth > target.offsetWidth) ||
-      this.props.auto === false;
+      (!!target && checkEllipsis(target)) || this.props.auto === false;
     if (!isTruncated) {
       return;
     }
