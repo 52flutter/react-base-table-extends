@@ -16,12 +16,12 @@ const getAllChildren = (item: ArtColumn) => {
       children.push(node);
     }
     if (node.children) {
-      node.children.forEach(p => {
+      node.children.forEach((p) => {
         deepChild(p);
       });
     }
   }
-  item?.children?.forEach(p => {
+  item?.children?.forEach((p) => {
     deepChild(p);
   });
 
@@ -29,16 +29,16 @@ const getAllChildren = (item: ArtColumn) => {
 };
 
 const getWidth = (leafColumns: ITreeItem[], item: ArtColumn, cells: any[]) => {
-  const _column = leafColumns.filter(p => p.key === item.key);
+  const _column = leafColumns.filter((p) => p.key === item.key);
   if (_column?.length > 0) {
     return _column[0].width;
   }
 
   const children = getAllChildren(item);
   let width = 0;
-  children.forEach(c => {
+  children.forEach((c) => {
     if (c.hidden !== true) {
-      const columnIndex = leafColumns.findIndex(p => p.key === c.key);
+      const columnIndex = leafColumns.findIndex((p) => p.key === c.key);
       if (columnIndex >= 0) {
         if (cells[columnIndex]?.props?.style?.width)
           if (cells[columnIndex]?.props?.style?.width)
@@ -52,16 +52,16 @@ const getWidth = (leafColumns: ITreeItem[], item: ArtColumn, cells: any[]) => {
 
 const geLeafNode = (leafColumns: ArtColumn[], item: ArtColumn) => {
   // 如果参数本身就是叶子节点
-  const _column = leafColumns.filter(p => p.key === item.key);
+  const _column = leafColumns.filter((p) => p.key === item.key);
   if (_column?.length > 0) {
     return _column;
   }
 
   const children = getAllChildren(item);
   let resData = [];
-  children.forEach(c => {
+  children.forEach((c) => {
     if (c.hidden !== true) {
-      const columnIndex = leafColumns.findIndex(p => p.key === c.key);
+      const columnIndex = leafColumns.findIndex((p) => p.key === c.key);
       if (columnIndex >= 0) {
         resData.push(c);
       }
@@ -72,15 +72,15 @@ const geLeafNode = (leafColumns: ArtColumn[], item: ArtColumn) => {
 };
 
 const getMinWidth = (columns: ArtColumn[], item: ArtColumn, cells: any[]) => {
-  const _column = columns.filter(p => p.key === item.key);
+  const _column = columns.filter((p) => p.key === item.key);
   if (_column?.length > 0) {
     return _column[0].minWidth;
   }
   const children = getAllChildren(item);
   let width = 0;
-  children.forEach(c => {
+  children.forEach((c) => {
     if (c.hidden !== true) {
-      const columnIndex = columns.findIndex(p => p.key === c.key);
+      const columnIndex = columns.findIndex((p) => p.key === c.key);
       if (columnIndex >= 0) {
         if (cells[columnIndex]?.props?.style.minWidth) {
           width += cells[columnIndex].props.style.minWidth;
@@ -114,14 +114,14 @@ export class TreeUtils {
   ) {
     callBack && callBack(node, deep);
     if (node && node.children) {
-      node.children.forEach(p => {
+      node.children.forEach((p) => {
         TreeUtils.deepChild(p as any, deep + 1, callBack);
       });
     }
   }
   static getTreeNodeLevel<T extends ITreeItem>(root: T[], item: T) {
     let max = 0;
-    root.map(p => {
+    root.map((p) => {
       TreeUtils.deepChild(p, 0, (node, deep) => {
         if (node.key === item.key) {
           max = deep;
@@ -132,7 +132,7 @@ export class TreeUtils {
   }
   static getTreeMaxLevel<T extends ITreeItem>(root: T[]) {
     let max = 0;
-    root.map(p => {
+    root.map((p) => {
       TreeUtils.deepChild(p, 0, (node, deep) => {
         if (max < deep) {
           max = deep;
@@ -143,7 +143,7 @@ export class TreeUtils {
   }
   static getTreeNodeByLevel<T extends ITreeItem>(root: T[], level: number) {
     let res: T[] = [];
-    root.map(p => {
+    root.map((p) => {
       TreeUtils.deepChild(p, 0, (node: any, deep) => {
         if (level === deep && node.hidden !== true) {
           res.push(node as T);
@@ -160,7 +160,7 @@ export function groupHeader(opts: {
 }) {
   return (pipeline: TablePipeline) => {
     const columns = pipeline.getColumns();
-    if (columns.find(p => p.children !== null && p.children !== undefined)) {
+    if (columns.find((p) => p.children !== null && p.children !== undefined)) {
       let flatColumns = collectNodes(columns);
       const padding = opts?.cellPadding || 7.5;
       let colTreeInfo: Record<string, RecursiveFlatMapInfo<ArtColumn>> = {};
@@ -175,13 +175,13 @@ export function groupHeader(opts: {
       );
       let maxLevel = 0;
       let rootColumns: ArtColumn[] = [];
-      Object.keys(colTreeInfo).map(key => {
+      Object.keys(colTreeInfo).map((key) => {
         const level = colTreeInfo[key].path.length;
         if (level > maxLevel) {
           maxLevel = level;
         }
         if (level === 1) {
-          rootColumns.push(flatColumns.find(p => p.key === key));
+          rootColumns.push(flatColumns.find((p) => p.key === key));
         }
       });
       const headerHead = opts?.headHeight
@@ -255,8 +255,9 @@ export function groupHeader(opts: {
           }
 
           // 寻找对应层次的节点
-          const nodes = TreeUtils.getTreeNodeByLevel([tree], headerIndex);
-          nodes.map(item => {
+          // const nodes = TreeUtils.getTreeNodeByLevel([tree], headerIndex);
+          const nodes = [colTreeInfo[column.key].path[headerIndex]];
+          nodes.map((item) => {
             if (renderEndMap[item.key.toString() + headerIndex]) {
               return;
             }
