@@ -94,11 +94,12 @@ export function treeMode(opts: TreeModeFeatureOptions = {}) {
     const iconIndent = opts.iconIndent ?? ctx.indents.iconIndent;
     const iconGap = opts.iconGap ?? ctx.indents.iconGap;
     const indentSize = opts.indentSize ?? ctx.indents.indentSize;
-    const [firstCol, ...others] = pipeline.getColumns();
+    const columnsData = pipeline.getColumns();
+    const firstShowCol = columnsData.find((t) => !t?.hidden);
 
     pipeline.appendTableProps('cellProps', (args) => {
       const { rowData, column } = args;
-      if (column.key === firstCol.key) {
+      if (column.key === firstShowCol.key) {
         if (rowData[treeMetaKey] == null) {
           // 没有 treeMeta 信息的话，就返回原先的 cellProps
           return null;
@@ -152,6 +153,9 @@ export function treeMode(opts: TreeModeFeatureOptions = {}) {
       }
       const [firstCol, ...others] = columns;
 
+      const columsClone = [...columns];
+      const _firstShowCol = columsClone.find((t) => !t?.hidden) || firstCol;
+
       const cellRenderer = (args: {
         cellData: any;
         columns: ArtColumn[];
@@ -163,7 +167,7 @@ export function treeMode(opts: TreeModeFeatureOptions = {}) {
         isScrolling?: boolean;
       }) => {
         const { rowData: record } = args;
-        const content = safeRender(firstCol, args);
+        const content = safeRender(_firstShowCol, args);
         if (record[treeMetaKey] == null) {
           // 没有 treeMeta 信息的话，就返回原先的渲染结果
           return content;
@@ -215,6 +219,21 @@ export function treeMode(opts: TreeModeFeatureOptions = {}) {
           </ExpansionCell>
         );
       };
+
+      const firstShowColIndex = columsClone.findIndex((t) => !t?.hidden);
+      if (firstShowColIndex > -1) {
+        const colExpand = columsClone[firstShowColIndex];
+        columsClone[firstShowColIndex] = {
+          ...colExpand,
+          name: (
+            <span style={{ marginLeft: iconIndent + iconWidth + iconGap }}>
+              {colExpand.name}
+            </span>
+          ),
+          cellRenderer: cellRenderer,
+        };
+        return [...columsClone];
+      }
 
       return [
         {
