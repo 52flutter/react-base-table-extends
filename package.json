@@ -1,6 +1,6 @@
 {
   "name": "react-base-table-extends",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -10,7 +10,8 @@
     "release": "npm run build && npm publish --registry https://registry.npmjs.org",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "test": "umi-test",
-    "test:coverage": "umi-test --coverage"
+    "test:coverage": "umi-test --coverage",
+    "build:beta": "npm publish --tag beta --registry https://registry.npmjs.org"
   },
   "main": "lib",
   "module": "es",

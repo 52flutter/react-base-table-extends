@@ -195,8 +195,10 @@ export default class ColumnManager {
     const style = {
       ...column.style,
       flex: flexValue,
-      msFlex: flexValue,
-      WebkitFlex: flexValue,
+      flexGrow,
+      flexShrink,
+      // msFlex: flexValue,
+      // WebkitFlex: flexValue,
       width: column.width,
       overflow: 'hidden',
     };
